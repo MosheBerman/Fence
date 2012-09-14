@@ -1,0 +1,309 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		46CA7D4F1556188E00AFA666 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D4E1556188E00AFA666 /* UIKit.framework */; };
+		46CA7D511556188E00AFA666 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D501556188E00AFA666 /* Foundation.framework */; };
+		46CA7D531556188E00AFA666 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D521556188E00AFA666 /* CoreGraphics.framework */; };
+		46CA7D591556188E00AFA666 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 46CA7D571556188E00AFA666 /* InfoPlist.strings */; };
+		46CA7D5B1556188E00AFA666 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CA7D5A1556188E00AFA666 /* main.m */; };
+		46CA7D5F1556188E00AFA666 /* MBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CA7D5E1556188E00AFA666 /* MBAppDelegate.m */; };
+		46CA7D621556188E00AFA666 /* MBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CA7D611556188E00AFA666 /* MBViewController.m */; };
+		46CA7D651556188E00AFA666 /* MBViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46CA7D631556188E00AFA666 /* MBViewController.xib */; };
+		46CA7D701556195900AFA666 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D6F1556195900AFA666 /* MapKit.framework */; };
+		46CA7D771556246D00AFA666 /* MBGeofence.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CA7D761556246D00AFA666 /* MBGeofence.m */; };
+		46CA7D7F15562D0400AFA666 /* MBCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CA7D7E15562D0400AFA666 /* MBCoordinate.m */; };
+		46CA7D8C1556348000AFA666 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D8B1556348000AFA666 /* QuartzCore.framework */; };
+		46CA7D8E15563A8B00AFA666 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D8D15563A8B00AFA666 /* CoreLocation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		46CA7D4A1556188E00AFA666 /* geofencer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geofencer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		46CA7D4E1556188E00AFA666 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		46CA7D501556188E00AFA666 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		46CA7D521556188E00AFA666 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		46CA7D561556188E00AFA666 /* geofencer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "geofencer-Info.plist"; sourceTree = "<group>"; };
+		46CA7D581556188E00AFA666 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		46CA7D5A1556188E00AFA666 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		46CA7D5C1556188E00AFA666 /* geofencer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "geofencer-Prefix.pch"; sourceTree = "<group>"; };
+		46CA7D5D1556188E00AFA666 /* MBAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBAppDelegate.h; sourceTree = "<group>"; };
+		46CA7D5E1556188E00AFA666 /* MBAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBAppDelegate.m; sourceTree = "<group>"; };
+		46CA7D601556188E00AFA666 /* MBViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBViewController.h; sourceTree = "<group>"; };
+		46CA7D611556188E00AFA666 /* MBViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBViewController.m; sourceTree = "<group>"; };
+		46CA7D641556188E00AFA666 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MBViewController.xib; sourceTree = "<group>"; };
+		46CA7D6F1556195900AFA666 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		46CA7D751556246D00AFA666 /* MBGeofence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBGeofence.h; sourceTree = "<group>"; };
+		46CA7D761556246D00AFA666 /* MBGeofence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBGeofence.m; sourceTree = "<group>"; };
+		46CA7D7D15562D0400AFA666 /* MBCoordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBCoordinate.h; sourceTree = "<group>"; };
+		46CA7D7E15562D0400AFA666 /* MBCoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBCoordinate.m; sourceTree = "<group>"; };
+		46CA7D8B1556348000AFA666 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		46CA7D8D15563A8B00AFA666 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		46CA7D471556188E00AFA666 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46CA7D8E15563A8B00AFA666 /* CoreLocation.framework in Frameworks */,
+				46CA7D8C1556348000AFA666 /* QuartzCore.framework in Frameworks */,
+				46CA7D701556195900AFA666 /* MapKit.framework in Frameworks */,
+				46CA7D4F1556188E00AFA666 /* UIKit.framework in Frameworks */,
+				46CA7D511556188E00AFA666 /* Foundation.framework in Frameworks */,
+				46CA7D531556188E00AFA666 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		46CA7D3F1556188E00AFA666 = {
+			isa = PBXGroup;
+			children = (
+				46CA7D541556188E00AFA666 /* geofencer */,
+				46CA7D4D1556188E00AFA666 /* Frameworks */,
+				46CA7D4B1556188E00AFA666 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		46CA7D4B1556188E00AFA666 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				46CA7D4A1556188E00AFA666 /* geofencer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		46CA7D4D1556188E00AFA666 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				46CA7D8D15563A8B00AFA666 /* CoreLocation.framework */,
+				46CA7D8B1556348000AFA666 /* QuartzCore.framework */,
+				46CA7D6F1556195900AFA666 /* MapKit.framework */,
+				46CA7D4E1556188E00AFA666 /* UIKit.framework */,
+				46CA7D501556188E00AFA666 /* Foundation.framework */,
+				46CA7D521556188E00AFA666 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		46CA7D541556188E00AFA666 /* geofencer */ = {
+			isa = PBXGroup;
+			children = (
+				46CA7D5D1556188E00AFA666 /* MBAppDelegate.h */,
+				46CA7D5E1556188E00AFA666 /* MBAppDelegate.m */,
+				46CA7D601556188E00AFA666 /* MBViewController.h */,
+				46CA7D611556188E00AFA666 /* MBViewController.m */,
+				46CA7D631556188E00AFA666 /* MBViewController.xib */,
+				46CA7D751556246D00AFA666 /* MBGeofence.h */,
+				46CA7D761556246D00AFA666 /* MBGeofence.m */,
+				46CA7D7D15562D0400AFA666 /* MBCoordinate.h */,
+				46CA7D7E15562D0400AFA666 /* MBCoordinate.m */,
+				46CA7D551556188E00AFA666 /* Supporting Files */,
+			);
+			path = geofencer;
+			sourceTree = "<group>";
+		};
+		46CA7D551556188E00AFA666 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				46CA7D561556188E00AFA666 /* geofencer-Info.plist */,
+				46CA7D571556188E00AFA666 /* InfoPlist.strings */,
+				46CA7D5A1556188E00AFA666 /* main.m */,
+				46CA7D5C1556188E00AFA666 /* geofencer-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		46CA7D491556188E00AFA666 /* geofencer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 46CA7D681556188E00AFA666 /* Build configuration list for PBXNativeTarget "geofencer" */;
+			buildPhases = (
+				46CA7D461556188E00AFA666 /* Sources */,
+				46CA7D471556188E00AFA666 /* Frameworks */,
+				46CA7D481556188E00AFA666 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = geofencer;
+			productName = geofencer;
+			productReference = 46CA7D4A1556188E00AFA666 /* geofencer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		46CA7D411556188E00AFA666 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = MB;
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 46CA7D441556188E00AFA666 /* Build configuration list for PBXProject "geofencer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 46CA7D3F1556188E00AFA666;
+			productRefGroup = 46CA7D4B1556188E00AFA666 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				46CA7D491556188E00AFA666 /* geofencer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		46CA7D481556188E00AFA666 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46CA7D591556188E00AFA666 /* InfoPlist.strings in Resources */,
+				46CA7D651556188E00AFA666 /* MBViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		46CA7D461556188E00AFA666 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46CA7D5B1556188E00AFA666 /* main.m in Sources */,
+				46CA7D5F1556188E00AFA666 /* MBAppDelegate.m in Sources */,
+				46CA7D621556188E00AFA666 /* MBViewController.m in Sources */,
+				46CA7D771556246D00AFA666 /* MBGeofence.m in Sources */,
+				46CA7D7F15562D0400AFA666 /* MBCoordinate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		46CA7D571556188E00AFA666 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				46CA7D581556188E00AFA666 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		46CA7D631556188E00AFA666 /* MBViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				46CA7D641556188E00AFA666 /* en */,
+			);
+			name = MBViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		46CA7D661556188E00AFA666 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		46CA7D671556188E00AFA666 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		46CA7D691556188E00AFA666 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "geofencer/geofencer-Prefix.pch";
+				INFOPLIST_FILE = "geofencer/geofencer-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		46CA7D6A1556188E00AFA666 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "geofencer/geofencer-Prefix.pch";
+				INFOPLIST_FILE = "geofencer/geofencer-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		46CA7D441556188E00AFA666 /* Build configuration list for PBXProject "geofencer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46CA7D661556188E00AFA666 /* Debug */,
+				46CA7D671556188E00AFA666 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		46CA7D681556188E00AFA666 /* Build configuration list for PBXNativeTarget "geofencer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46CA7D691556188E00AFA666 /* Debug */,
+				46CA7D6A1556188E00AFA666 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 46CA7D411556188E00AFA666 /* Project object */;
+}
