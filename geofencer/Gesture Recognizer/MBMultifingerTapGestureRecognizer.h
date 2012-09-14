@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MBMultifingerTapGestureRecognizer : UIGestureRecognizer
+typedef void (^TouchesEventBlock)(NSSet * touches, UIEvent * event);
 
+@interface MBMultifingerTapGestureRecognizer : UITapGestureRecognizer
+
+@property (copy) TouchesEventBlock touchesBeganCallback;
+@property (copy) TouchesEventBlock touchesMovedCallback;
 @end

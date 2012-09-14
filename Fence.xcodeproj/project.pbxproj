@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		461DFDDA155B874400B62E4B /* MBPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 461DFDD9155B874400B62E4B /* MBPointAnnotation.m */; };
+		468073361559D4E600D96632 /* MBAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 468073351559D4E600D96632 /* MBAnnotationView.m */; };
+		468D573215DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 468D573115DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.m */; };
+		468FB22E155710BA00AA0AFD /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 468FB22D155710BA00AA0AFD /* MessageUI.framework */; };
+		468FB2321557197B00AA0AFD /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 468FB2301557197B00AA0AFD /* delete.png */; };
+		468FB2331557197B00AA0AFD /* delete@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 468FB2311557197B00AA0AFD /* delete@2x.png */; };
+		46A30F7C1557FBF00021D129 /* MBExportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 46A30F7A1557FBF00021D129 /* MBExportViewController.m */; };
+		46A30F7D1557FBF00021D129 /* MBExportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46A30F7B1557FBF00021D129 /* MBExportViewController.xib */; };
 		46CA7D4F1556188E00AFA666 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D4E1556188E00AFA666 /* UIKit.framework */; };
 		46CA7D511556188E00AFA666 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D501556188E00AFA666 /* Foundation.framework */; };
 		46CA7D531556188E00AFA666 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D521556188E00AFA666 /* CoreGraphics.framework */; };
@@ -20,17 +28,31 @@
 		46CA7D7F15562D0400AFA666 /* MBCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CA7D7E15562D0400AFA666 /* MBCoordinate.m */; };
 		46CA7D8C1556348000AFA666 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D8B1556348000AFA666 /* QuartzCore.framework */; };
 		46CA7D8E15563A8B00AFA666 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D8D15563A8B00AFA666 /* CoreLocation.framework */; };
+		46EB9C291556CDEA007523BB /* delete_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 46EB9C271556CDEA007523BB /* delete_button.png */; };
+		46EB9C2A1556CDEA007523BB /* delete_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 46EB9C281556CDEA007523BB /* delete_button@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		46CA7D4A1556188E00AFA666 /* geofencer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geofencer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		461DFDD8155B874400B62E4B /* MBPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBPointAnnotation.h; path = Pins/MBPointAnnotation.h; sourceTree = "<group>"; };
+		461DFDD9155B874400B62E4B /* MBPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBPointAnnotation.m; path = Pins/MBPointAnnotation.m; sourceTree = "<group>"; };
+		468073341559D4E600D96632 /* MBAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBAnnotationView.h; path = Pins/MBAnnotationView.h; sourceTree = "<group>"; };
+		468073351559D4E600D96632 /* MBAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBAnnotationView.m; path = Pins/MBAnnotationView.m; sourceTree = "<group>"; };
+		468D573015DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBMultifingerTapGestureRecognizer.h; path = "Gesture Recognizer/MBMultifingerTapGestureRecognizer.h"; sourceTree = "<group>"; };
+		468D573115DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBMultifingerTapGestureRecognizer.m; path = "Gesture Recognizer/MBMultifingerTapGestureRecognizer.m"; sourceTree = "<group>"; };
+		468FB22D155710BA00AA0AFD /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		468FB2301557197B00AA0AFD /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = delete.png; path = Images/delete.png; sourceTree = "<group>"; };
+		468FB2311557197B00AA0AFD /* delete@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "delete@2x.png"; path = "Images/delete@2x.png"; sourceTree = "<group>"; };
+		46A30F791557FBF00021D129 /* MBExportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBExportViewController.h; sourceTree = "<group>"; };
+		46A30F7A1557FBF00021D129 /* MBExportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBExportViewController.m; sourceTree = "<group>"; };
+		46A30F7B1557FBF00021D129 /* MBExportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MBExportViewController.xib; sourceTree = "<group>"; };
+		46CA7D4A1556188E00AFA666 /* Fence.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fence.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		46CA7D4E1556188E00AFA666 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		46CA7D501556188E00AFA666 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		46CA7D521556188E00AFA666 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		46CA7D561556188E00AFA666 /* geofencer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "geofencer-Info.plist"; sourceTree = "<group>"; };
+		46CA7D561556188E00AFA666 /* Fence-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Fence-Info.plist"; sourceTree = "<group>"; };
 		46CA7D581556188E00AFA666 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		46CA7D5A1556188E00AFA666 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		46CA7D5C1556188E00AFA666 /* geofencer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "geofencer-Prefix.pch"; sourceTree = "<group>"; };
+		46CA7D5C1556188E00AFA666 /* Fence-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Fence-Prefix.pch"; sourceTree = "<group>"; };
 		46CA7D5D1556188E00AFA666 /* MBAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBAppDelegate.h; sourceTree = "<group>"; };
 		46CA7D5E1556188E00AFA666 /* MBAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBAppDelegate.m; sourceTree = "<group>"; };
 		46CA7D601556188E00AFA666 /* MBViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBViewController.h; sourceTree = "<group>"; };
@@ -43,6 +65,8 @@
 		46CA7D7E15562D0400AFA666 /* MBCoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBCoordinate.m; sourceTree = "<group>"; };
 		46CA7D8B1556348000AFA666 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		46CA7D8D15563A8B00AFA666 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		46EB9C271556CDEA007523BB /* delete_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = delete_button.png; path = Images/delete_button.png; sourceTree = "<group>"; };
+		46EB9C281556CDEA007523BB /* delete_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "delete_button@2x.png"; path = "Images/delete_button@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				468FB22E155710BA00AA0AFD /* MessageUI.framework in Frameworks */,
 				46CA7D8E15563A8B00AFA666 /* CoreLocation.framework in Frameworks */,
 				46CA7D8C1556348000AFA666 /* QuartzCore.framework in Frameworks */,
 				46CA7D701556195900AFA666 /* MapKit.framework in Frameworks */,
@@ -62,6 +87,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		46A30F771557830E0021D129 /* Location Structs */ = {
+			isa = PBXGroup;
+			children = (
+				46CA7D751556246D00AFA666 /* MBGeofence.h */,
+				46CA7D761556246D00AFA666 /* MBGeofence.m */,
+				46CA7D7D15562D0400AFA666 /* MBCoordinate.h */,
+				46CA7D7E15562D0400AFA666 /* MBCoordinate.m */,
+				468073341559D4E600D96632 /* MBAnnotationView.h */,
+				468073351559D4E600D96632 /* MBAnnotationView.m */,
+			);
+			name = "Location Structs";
+			sourceTree = "<group>";
+		};
 		46CA7D3F1556188E00AFA666 = {
 			isa = PBXGroup;
 			children = (
@@ -74,7 +112,7 @@
 		46CA7D4B1556188E00AFA666 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				46CA7D4A1556188E00AFA666 /* geofencer.app */,
+				46CA7D4A1556188E00AFA666 /* Fence.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,6 +120,7 @@
 		46CA7D4D1556188E00AFA666 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				468FB22D155710BA00AA0AFD /* MessageUI.framework */,
 				46CA7D8D15563A8B00AFA666 /* CoreLocation.framework */,
 				46CA7D8B1556348000AFA666 /* QuartzCore.framework */,
 				46CA7D6F1556195900AFA666 /* MapKit.framework */,
@@ -100,10 +139,14 @@
 				46CA7D601556188E00AFA666 /* MBViewController.h */,
 				46CA7D611556188E00AFA666 /* MBViewController.m */,
 				46CA7D631556188E00AFA666 /* MBViewController.xib */,
-				46CA7D751556246D00AFA666 /* MBGeofence.h */,
-				46CA7D761556246D00AFA666 /* MBGeofence.m */,
-				46CA7D7D15562D0400AFA666 /* MBCoordinate.h */,
-				46CA7D7E15562D0400AFA666 /* MBCoordinate.m */,
+				46A30F791557FBF00021D129 /* MBExportViewController.h */,
+				46A30F7A1557FBF00021D129 /* MBExportViewController.m */,
+				46A30F7B1557FBF00021D129 /* MBExportViewController.xib */,
+				461DFDD8155B874400B62E4B /* MBPointAnnotation.h */,
+				461DFDD9155B874400B62E4B /* MBPointAnnotation.m */,
+				468D573015DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.h */,
+				468D573115DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.m */,
+				46A30F771557830E0021D129 /* Location Structs */,
 				46CA7D551556188E00AFA666 /* Supporting Files */,
 			);
 			path = geofencer;
@@ -112,32 +155,45 @@
 		46CA7D551556188E00AFA666 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				46CA7D561556188E00AFA666 /* geofencer-Info.plist */,
+				46EB9C2B1556D00D007523BB /* Images */,
+				46CA7D561556188E00AFA666 /* Fence-Info.plist */,
 				46CA7D571556188E00AFA666 /* InfoPlist.strings */,
 				46CA7D5A1556188E00AFA666 /* main.m */,
-				46CA7D5C1556188E00AFA666 /* geofencer-Prefix.pch */,
+				46CA7D5C1556188E00AFA666 /* Fence-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		46EB9C2B1556D00D007523BB /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				468FB2301557197B00AA0AFD /* delete.png */,
+				468FB2311557197B00AA0AFD /* delete@2x.png */,
+				46EB9C271556CDEA007523BB /* delete_button.png */,
+				46EB9C281556CDEA007523BB /* delete_button@2x.png */,
+			);
+			name = Images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		46CA7D491556188E00AFA666 /* geofencer */ = {
+		46CA7D491556188E00AFA666 /* Fence */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 46CA7D681556188E00AFA666 /* Build configuration list for PBXNativeTarget "geofencer" */;
+			buildConfigurationList = 46CA7D681556188E00AFA666 /* Build configuration list for PBXNativeTarget "Fence" */;
 			buildPhases = (
 				46CA7D461556188E00AFA666 /* Sources */,
 				46CA7D471556188E00AFA666 /* Frameworks */,
+				46EB9C341556FB2A007523BB /* ShellScript */,
 				46CA7D481556188E00AFA666 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = geofencer;
+			name = Fence;
 			productName = geofencer;
-			productReference = 46CA7D4A1556188E00AFA666 /* geofencer.app */;
+			productReference = 46CA7D4A1556188E00AFA666 /* Fence.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -149,7 +205,7 @@
 				CLASSPREFIX = MB;
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = 46CA7D441556188E00AFA666 /* Build configuration list for PBXProject "geofencer" */;
+			buildConfigurationList = 46CA7D441556188E00AFA666 /* Build configuration list for PBXProject "Fence" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -161,7 +217,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				46CA7D491556188E00AFA666 /* geofencer */,
+				46CA7D491556188E00AFA666 /* Fence */,
 			);
 		};
 /* End PBXProject section */
@@ -173,10 +229,31 @@
 			files = (
 				46CA7D591556188E00AFA666 /* InfoPlist.strings in Resources */,
 				46CA7D651556188E00AFA666 /* MBViewController.xib in Resources */,
+				46EB9C291556CDEA007523BB /* delete_button.png in Resources */,
+				46EB9C2A1556CDEA007523BB /* delete_button@2x.png in Resources */,
+				468FB2321557197B00AA0AFD /* delete.png in Resources */,
+				468FB2331557197B00AA0AFD /* delete@2x.png in Resources */,
+				46A30F7D1557FBF00021D129 /* MBExportViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		46EB9C341556FB2A007523BB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Auto Increment Version Script\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		46CA7D461556188E00AFA666 /* Sources */ = {
@@ -188,6 +265,10 @@
 				46CA7D621556188E00AFA666 /* MBViewController.m in Sources */,
 				46CA7D771556246D00AFA666 /* MBGeofence.m in Sources */,
 				46CA7D7F15562D0400AFA666 /* MBCoordinate.m in Sources */,
+				46A30F7C1557FBF00021D129 /* MBExportViewController.m in Sources */,
+				468073361559D4E600D96632 /* MBAnnotationView.m in Sources */,
+				461DFDDA155B874400B62E4B /* MBPointAnnotation.m in Sources */,
+				468D573215DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,9 +345,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "geofencer/geofencer-Prefix.pch";
-				INFOPLIST_FILE = "geofencer/geofencer-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "geofencer/Fence-Prefix.pch";
+				INFOPLIST_FILE = "geofencer/Fence-Info.plist";
+				PRODUCT_NAME = Fence;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -275,30 +356,66 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "geofencer/geofencer-Prefix.pch";
-				INFOPLIST_FILE = "geofencer/geofencer-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "geofencer/Fence-Prefix.pch";
+				INFOPLIST_FILE = "geofencer/Fence-Info.plist";
+				PRODUCT_NAME = Fence;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};
+		46EB9C321556FAE8007523BB /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Ad Hoc";
+		};
+		46EB9C331556FAE8007523BB /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Moshe Berman";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "geofencer/Fence-Prefix.pch";
+				INFOPLIST_FILE = "geofencer/Fence-Info.plist";
+				PRODUCT_NAME = Fence;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2C13AC4E-A777-4FF4-9179-B7B96875B5E3";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Ad Hoc";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		46CA7D441556188E00AFA666 /* Build configuration list for PBXProject "geofencer" */ = {
+		46CA7D441556188E00AFA666 /* Build configuration list for PBXProject "Fence" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				46CA7D661556188E00AFA666 /* Debug */,
 				46CA7D671556188E00AFA666 /* Release */,
+				46EB9C321556FAE8007523BB /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		46CA7D681556188E00AFA666 /* Build configuration list for PBXNativeTarget "geofencer" */ = {
+		46CA7D681556188E00AFA666 /* Build configuration list for PBXNativeTarget "Fence" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				46CA7D691556188E00AFA666 /* Debug */,
 				46CA7D6A1556188E00AFA666 /* Release */,
+				46EB9C331556FAE8007523BB /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

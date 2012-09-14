@@ -3,7 +3,7 @@
 //  geofencer
 //
 //  Created by Moshe Berman on 5/5/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Moshe Berman. All rights reserved.
 //
 
 #import "MBAppDelegate.h"
@@ -14,13 +14,17 @@
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
+@synthesize navigationController = _navigationController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+
     self.viewController = [[MBViewController alloc] initWithNibName:@"MBViewController" bundle:nil];
-    self.window.rootViewController = self.viewController;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+    self.navigationController = navigationController;
+    self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
     return YES;
 }

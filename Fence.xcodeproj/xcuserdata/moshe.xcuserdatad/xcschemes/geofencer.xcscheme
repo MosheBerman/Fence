@@ -14,9 +14,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "46CA7D491556188E00AFA666"
-               BuildableName = "geofencer.app"
-               BlueprintName = "geofencer"
-               ReferencedContainer = "container:geofencer.xcodeproj">
+               BuildableName = "Fence.app"
+               BlueprintName = "Fence"
+               ReferencedContainer = "container:Fence.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,9 +32,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "46CA7D491556188E00AFA666"
-            BuildableName = "geofencer.app"
-            BlueprintName = "geofencer"
-            ReferencedContainer = "container:geofencer.xcodeproj">
+            BuildableName = "Fence.app"
+            BlueprintName = "Fence"
+            ReferencedContainer = "container:Fence.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -51,9 +51,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "46CA7D491556188E00AFA666"
-            BuildableName = "geofencer.app"
-            BlueprintName = "geofencer"
-            ReferencedContainer = "container:geofencer.xcodeproj">
+            BuildableName = "Fence.app"
+            BlueprintName = "Fence"
+            ReferencedContainer = "container:Fence.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -69,9 +69,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "46CA7D491556188E00AFA666"
-            BuildableName = "geofencer.app"
-            BlueprintName = "geofencer"
-            ReferencedContainer = "container:geofencer.xcodeproj">
+            BuildableName = "Fence.app"
+            BlueprintName = "Fence"
+            ReferencedContainer = "container:Fence.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
@@ -79,7 +79,8 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Ad Hoc"
+      customArchiveName = "Fence"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
