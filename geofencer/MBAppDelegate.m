@@ -12,9 +12,6 @@
 
 @implementation MBAppDelegate
 
-@synthesize window = _window;
-@synthesize viewController = _viewController;
-@synthesize navigationController = _navigationController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

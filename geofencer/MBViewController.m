@@ -48,8 +48,7 @@
  
  */
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     //
@@ -63,33 +62,17 @@
     threeFingerTouch.delegate = self;
     
     for (UIGestureRecognizer *gesture in self.mapView.gestureRecognizers) {
-        
-        //[gesture requireGestureRecognizerToFail:threeFingerTouch];
+        [gesture requireGestureRecognizerToFail:threeFingerTouch];
     }
     
+    [[self mapView] addGestureRecognizer:threeFingerTouch];
     
+    [[self mapView] setDelegate:self];
     
-
+    [self setGeofences:[@[] mutableCopy]];
     
-    [self.mapView addGestureRecognizer:threeFingerTouch];
-    
-    //
-    //  Set up the map delegate
-    //
-    
-    self.mapView.delegate = self;
-    
-    //
-    //  Set up a working geofence
-    //
-    
-    self.geofences = [[NSMutableArray alloc] init];
-    
-    //
-    //  Set the title.
-    //
-    
-    self.title = NSLocalizedString(@"Fence", @"Fence");
+    NSString *title = NSLocalizedString(@"Fence", @"Fence");
+    [self setTitle:title];
     
     //
     //  Configure the buttons
@@ -101,7 +84,7 @@
     //  Set up a map type segmented control
     //
     
-    NSArray *mapTypes = [NSArray arrayWithObjects:NSLocalizedString(@"Standard", @"Standard"), NSLocalizedString(@"Satellite", @"Satellite"), NSLocalizedString(@"Hybrid", @"Hybrid"), nil];
+    NSArray *mapTypes = @[NSLocalizedString(@"Standard", @"Standard"), NSLocalizedString(@"Satellite", @"Satellite"), NSLocalizedString(@"Hybrid", @"Hybrid")];
     
     UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:mapTypes];
     [segmentedControl setSegmentedControlStyle:UISegmentedControlStyleBar];
@@ -110,7 +93,7 @@
     
     UIBarButtonItem *mapTypeButton = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
     
-    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObject:mapTypeButton] animated:YES];
+    [self.navigationItem setLeftBarButtonItems:@[mapTypeButton] animated:YES];
     
     //
     //  Set up annotations
@@ -126,7 +109,7 @@
     
     if (temp) {
         self.geofences = [temp mutableCopy];
-        self.workingGeofence = [temp objectAtIndex:0];
+        self.workingGeofence = temp[0];
         [self newFence];
         [self renderAndSave];
     }
@@ -230,7 +213,7 @@
         self.actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(showActionSheet)];
     }
     
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects: self.actionButton, nil] animated:YES];
+    [self.navigationItem setRightBarButtonItems:@[self.actionButton] animated:YES];
     
 }   
 
@@ -245,7 +228,7 @@
         [self.actionSheet addButtonWithTitle:NSLocalizedString(@"Import Fence", @"Import Fence")];
     }   
     
-    [self.actionSheet showFromBarButtonItem:[self.navigationItem.rightBarButtonItems objectAtIndex:0] animated:YES];
+    [self.actionSheet showFromBarButtonItem:(self.navigationItem.rightBarButtonItems)[0] animated:YES];
     
 }
 
@@ -635,7 +618,7 @@
     }
     
     for (NSInteger i=0;i<self.geofences.count;i++) {
-        MBGeofence *fence = [self.geofences objectAtIndex:i];
+        MBGeofence *fence = (self.geofences)[i];
         MKPolygon *polygon = [fence polygonRepresentation];
         polygon.title = [fence name];
         [self.mapView addAnnotation:polygon];
@@ -712,7 +695,7 @@
 
 - (void)setActiveFenceWithIndex:(NSInteger)index{
     if (self.geofences.count > index && index >= 0) {
-        self.workingGeofence = [self.geofences objectAtIndex:index];
+        self.workingGeofence = (self.geofences)[index];
     }
 }
 
@@ -818,7 +801,7 @@
     NSMutableArray *array = [[NSMutableArray alloc] init];
     
     for (NSInteger i=0; i<self.geofences.count; i++) {
-        [array addObject:[[self.geofences objectAtIndex:i] asDictionary]];
+        [array addObject:[(self.geofences)[i] asDictionary]];
     }
     
     return array;
@@ -848,18 +831,18 @@
     
     for (NSInteger i = 0; i<fences.count; i++) {
         
-        NSDictionary *dictionary = [fences objectAtIndex:i];
-        MBGeofence *fence = [[MBGeofence alloc] initWithName:[dictionary objectForKey:@"name"]];
+        NSDictionary *dictionary = fences[i];
+        MBGeofence *fence = [[MBGeofence alloc] initWithName:dictionary[@"name"]];
         
-        NSArray *coords = [dictionary objectForKey:@"coordinates"];
+        NSArray *coords = dictionary[@"coordinates"];
         
         //
         //  Iterate the coordinates
         //
         
         for (NSInteger j =0; j<coords.count; j++) {
-            NSDictionary *coordDict = [coords objectAtIndex:j];
-            CLLocationCoordinate2D location = CLLocationCoordinate2DMake([[coordDict objectForKey:@"latitude"] doubleValue], [[coordDict objectForKey:@"longitude"] doubleValue]);
+            NSDictionary *coordDict = coords[j];
+            CLLocationCoordinate2D location = CLLocationCoordinate2DMake([coordDict[@"latitude"] doubleValue], [coordDict[@"longitude"] doubleValue]);
             [fence addLocation:location];
         }
         
@@ -934,7 +917,7 @@ int pnpoly(int nvert, double *vertx, double *verty, double testx, double testy)
         
         for (int i=0; i<count; i++) {
             
-            CLLocationCoordinate2D coord = [[fence.points objectAtIndex:i] CLLocationCoordinate2DRepresentation];
+            CLLocationCoordinate2D coord = [(fence.points)[i] CLLocationCoordinate2DRepresentation];
             
             vertx[i] = coord.latitude;
             verty[i] = coord.longitude;
