@@ -36,7 +36,7 @@
 }
 
 - (NSString *)description{
-    return [NSString stringWithFormat:@"{%f, %f}", self.latitude, self.longitude];
+    return [NSString stringWithFormat:@"{%f, %f}", [self latitude], [self longitude]];
 }
 
 - (NSDictionary *)asDictionary{
