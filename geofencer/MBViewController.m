@@ -157,6 +157,10 @@
         return;
     }
     
+    if ([[[self workingGeofence] points] count] >= 20) {
+        return;
+    }
+    
     [self addPointToActiveFenceAtPoint:[gestureRecognizer locationOfTouch:0 inView:self.view]];
     [self renderAnnotations];
 }
