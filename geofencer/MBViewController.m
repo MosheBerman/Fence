@@ -53,50 +53,26 @@
  
  */
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     
-    //
-    //  Set up a gesture recognizer for placing fences
-    //
-    //  See this StackOverflow question for more: http://stackoverflow.com/questions/4317810/how-to-capture-tap-gesture-on-mkmapview
-    //
-
-    UITapGestureRecognizer *threeFingerTouch = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(newFenceWithGesture:)];
-    threeFingerTouch.numberOfTouchesRequired= 3;
-    threeFingerTouch.delegate = self;
-    
-    for (UIGestureRecognizer *gesture in self.mapView.gestureRecognizers) {
-        [gesture requireGestureRecognizerToFail:threeFingerTouch];
+    if (self) {
+        
+        _geofences = [@[] mutableCopy];
+        _annotations = [@[] mutableCopy];
     }
     
-    [[self mapView] addGestureRecognizer:threeFingerTouch];
-    
-    //
-    //  Set up a gesture to add points to a working fence
-    //
-    
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addPointToActiveFenceFromGesture:)];
-    
-    tapGesture.numberOfTouchesRequired = 1;
-    tapGesture.delegate = self;
-    [[self mapView] addGestureRecognizer:tapGesture];
-    
-    //
-    //
-    //
-    
+    return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
     [[self mapView] setDelegate:self];
-    
-    [self setGeofences:[@[] mutableCopy]];
     
     NSString *title = NSLocalizedString(@"Fence", @"Fence");
     [self setTitle:title];
-    
-    //
-    //  Configure the buttons
-    //
     
     [self configureButtons];
     
@@ -115,26 +91,29 @@
     
     [self.navigationItem setLeftBarButtonItems:@[mapTypeButton] animated:YES];
     
-    //
-    //  Set up annotations
-    //
-    
-    self.annotations = [[NSMutableArray alloc] init];
+    NSTimer *aTimer  = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(autosave) userInfo:nil repeats:YES];
+    [self setSaveTimer:aTimer];
     
     //
-    // Load saved Fences
+    //  Set up a gesture recognizer for placing fences.
+    //  See this StackOverflow question for more: http://stackoverflow.com/questions/4317810/how-to-capture-tap-gesture-on-mkmapview
     //
     
-    NSArray *temp = [self deserializeFencesAtURL:[[self applicationCachesDirectory] URLByAppendingPathComponent:@"Fences.plist"]];
+    UITapGestureRecognizer *threeFingerTouch = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(newFenceWithGesture:)];
+    [threeFingerTouch setNumberOfTouchesRequired:3];
+    [threeFingerTouch setDelegate:self];
     
-    if (temp) {
-        self.geofences = [temp mutableCopy];
-        self.workingGeofence = temp[0];
-        [self newFence];
-        [self renderAndSave];
+    for (UIGestureRecognizer *gesture in [[self mapView] gestureRecognizers]) {
+        [gesture requireGestureRecognizerToFail:threeFingerTouch];
     }
     
-    self.saveTimer = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(autosave) userInfo:nil repeats:YES];
+    [[self mapView] addGestureRecognizer:threeFingerTouch];
+    
+    UILongPressGestureRecognizer*tapGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(addPointToActiveFenceFromGesture:)];
+    [tapGesture setNumberOfTouchesRequired:1];
+    [tapGesture setMinimumPressDuration:0.3f];
+    [tapGesture setDelegate:self];
+    [[self mapView] addGestureRecognizer:tapGesture];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -145,54 +124,21 @@
     //
     
     //  TODO: This could potentially be a performance killer if there are a lot of points.
-    
     [self saveIndividualFencesToCachesDirectory];
     
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     return YES;
 }
 
-#pragma mark - Gesture Handlers 
+#pragma mark - Gesture Handlers
 
-/*
-//
-//  Add a point to the working overlay
-//
-
-- (void)singleTap:(UIGestureRecognizer *)gestureRecognizer{
+- (void)newFenceWithGesture:(UITapGestureRecognizer *)gestureRecognizer{
     
-    NSLog(@"State: %i", gestureRecognizer.state);
-    
-    if (gestureRecognizer.state != UIGestureRecognizerStateEnded) return;
-    
-    CGPoint touchPoint = [gestureRecognizer locationInView:mapView];
-    
-    if (self.mode == kEditModeNavigate) {
-        
-        CLLocationCoordinate2D touchMapCoordinate = [mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
-        
-        MBGeofence *fence = [self fenceContainingPoint:touchMapCoordinate];
-        
-        if (fence) {
-            self.workingGeofence = fence;
-            self.mode = kEditModeCoordinates;
-            [self renderAnnotations];
-            [self configureButtons];
-        }
-        
+    if (gestureRecognizer.state != UIGestureRecognizerStateEnded){
         return;
     }
-    
-    [self addPointToActiveFenceAtPoint:touchPoint];
-}
-
- */
-
-
-- (void) newFenceWithGesture:(UITapGestureRecognizer *)gestureRecognizer{
     
     [self newFence];
     
@@ -206,8 +152,13 @@
 }
 
 - (void)addPointToActiveFenceFromGesture:(UITapGestureRecognizer *)gestureRecognizer{
+    
+    if (gestureRecognizer.state != UIGestureRecognizerStateEnded){
+        return;
+    }
+    
     [self addPointToActiveFenceAtPoint:[gestureRecognizer locationOfTouch:0 inView:self.view]];
-    [self renderAnnotations];    
+    [self renderAnnotations];
 }
 
 #pragma mark - Pin Actions
@@ -224,41 +175,40 @@
         
 }
 
-#pragma mark - Button Setup
+#pragma mark - UI Setup
 
 //
 //  Set up the buttons for the navigation bar
 //
 
-- (void) configureButtons{
+- (void)configureButtons{
     
     //
     //  Create the action button
     //
     
-    if (!self.actionButton) {
-        self.actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(showActionSheet)];
+    if (![self actionButton]) {
+        UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(showActionSheet)];
+        [self setActionButton:button];
     }
     
-    [self.navigationItem setRightBarButtonItems:@[self.actionButton] animated:YES];
+    [self.navigationItem setRightBarButtonItems:@[[self actionButton]] animated:YES];
     
 }   
 
-#pragma mark - Button Actions
+- (void)showActionSheet{
+    if (![self actionSheet]) {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
 
-- (void) showActionSheet{
-    if (!self.actionSheet) {
-        self.actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Export to iTunes", @"Export to iTunes")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Share via Email", @"Share via Email")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Import Fence", @"Import Fence")];
         
-        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"Export to iTunes", @"Export to iTunes")];
-        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"Share via Email", @"Share via Email")];
-        [self.actionSheet addButtonWithTitle:NSLocalizedString(@"Import Fence", @"Import Fence")];
+        [self setActionSheet:actionSheet];
     }   
     
-    [self.actionSheet showFromBarButtonItem:(self.navigationItem.rightBarButtonItems)[0] animated:YES];
-    
+    [[self actionSheet] showFromBarButtonItem:(self.navigationItem.rightBarButtonItems)[0] animated:YES];
 }
-
 
 #pragma mark - Map View Delegate
 
@@ -276,7 +226,7 @@
         //  Make a view for the annotation title
         //
         
-        MBAnnotationView *view = (MBAnnotationView*)[self.mapView dequeueReusableAnnotationViewWithIdentifier:reuse];
+        MBAnnotationView *annotationView = (MBAnnotationView*)[self.mapView dequeueReusableAnnotationViewWithIdentifier:reuse];
         
         //
         //  Prepare to set up the label
@@ -295,64 +245,61 @@
         //  Instantiate the view as necessary
         //
         
-        if(!view){
-            view = [[MBAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuse];
+        if(!annotationView){
+            annotationView = [[MBAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuse];
             
             //
             //  Set up a title label
             //
             
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, width, size.height)];
-            label.textColor = [UIColor whiteColor];
-            label.textAlignment = UITextAlignmentCenter;
-            label.layer.borderColor = [UIColor darkGrayColor].CGColor;
-            label.layer.borderWidth = 1.0;
-            label.backgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.7];
-            label.layer.cornerRadius = 5.0;
-            label.text = labelText;
-            label.font = labelFont;        
+            [label setTextColor:[UIColor whiteColor]];
+            [label setTextAlignment:NSTextAlignmentCenter];
+            [[label layer] setBorderColor:[UIColor darkGrayColor].CGColor];
+            [[label layer] setBorderWidth:1.0];
+            [label setBackgroundColor:[[UIColor darkGrayColor] colorWithAlphaComponent:0.7]];
+            [[label layer] setCornerRadius: 5.0];
+            [label setText:labelText];
+            [label setFont:labelFont];
             
             label.tag = 37;
             
-            [view addSubview:label];
+            [annotationView addSubview:label];
             
             //
             //  Create a remove button
             //
             
             UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-            
             [deleteButton setBackgroundImage:[UIImage imageNamed:@"delete.png"] forState:UIControlStateNormal];
+            [annotationView setLeftCalloutAccessoryView:deleteButton];
             
-
-            [view setLeftCalloutAccessoryView:deleteButton];
-        
+            [annotationView setBackgroundColor:[UIColor clearColor]];
             
-            [view setBackgroundColor:[UIColor clearColor]];
             
             //
             //
             //
             
             UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-            [view setRightCalloutAccessoryView:infoButton];
+            [annotationView setRightCalloutAccessoryView:infoButton];
         }                
         
         
-        ((UILabel *)[view viewWithTag:37]).text = [annotation title];
+        ((UILabel *)[annotationView viewWithTag:37]).text = [annotation title];
         
-        ((UILabel *)[view viewWithTag:37]).frame = CGRectMake(0, 0, width, 25);
-        [view setFrame:CGRectMake(0, 0, width, 25)];
+        ((UILabel *)[annotationView viewWithTag:37]).frame = CGRectMake(0, 0, width, 25);
+        [annotationView setFrame:CGRectMake(0, 0, width, 25)];
         
         
         
-        view.canShowCallout = YES;
+        annotationView.canShowCallout = YES;
         
         //
         //
         //
         
-        return view;
+        return annotationView;
         
     }else{
         //
@@ -392,9 +339,9 @@
                                 forState:UIControlStateNormal];
         
         [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        deleteButton.titleLabel.font = labelFont;
-        deleteButton.titleLabel.shadowColor = [UIColor lightGrayColor];
-        deleteButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
+        [[deleteButton titleLabel] setFont: labelFont];
+        [[deleteButton titleLabel] setShadowColor: [UIColor lightGrayColor]];
+        [[deleteButton titleLabel] setShadowOffset: CGSizeMake(0, -1)];
         [deleteButton setTitle:labelText forState:UIControlStateNormal];
         
         
@@ -410,6 +357,8 @@
         
         if([[[self workingGeofence] points] count] > 3){
             [pin setRightCalloutAccessoryView:deleteButton];
+        }else{
+            [pin setRightCalloutAccessoryView:nil];
         }
         
         return pin;
@@ -586,6 +535,25 @@
 #pragma mark - Gesture Recognizer
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+    
+    for (UIView *subview in [[self mapView] subviews]) {
+        
+        if ([[subview class] conformsToProtocol:@protocol(MKAnnotation) ]) {
+            
+            if (CGRectContainsPoint([subview frame], [touch locationInView:[self view]])) {
+             
+                
+                
+                return NO;
+                
+            }
+        }
+    }
+    
     return YES;
 }
 
