@@ -13,6 +13,12 @@
 
 @interface MBViewController () <UIGestureRecognizerDelegate>
 
+@property (strong, nonatomic) NSMutableArray *geofences;
+@property (strong, nonatomic) MBGeofence *workingGeofence;
+
+@property (strong, nonatomic) NSMutableArray *annotations;
+@property (strong, nonatomic) NSMutableArray *overlays;
+
 @end
 
 @implementation MBViewController
@@ -43,21 +49,21 @@
  
  TODO: Gestures
  
- Long press to toggle mode
- Tap to add point - While editing a fence
+ Tap to add point - While editing a fence. Long press ends editing and saves.
  
  */
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
     //
-    //  Set up a gesture recognizer for placing annotations
+    //  Set up a gesture recognizer for placing fences
     //
     //  See this StackOverflow question for more: http://stackoverflow.com/questions/4317810/how-to-capture-tap-gesture-on-mkmapview
     //
 
-    UITapGestureRecognizer *threeFingerTouch = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(newFenceWithTouches:)];
+    UITapGestureRecognizer *threeFingerTouch = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(newFenceWithGesture:)];
     threeFingerTouch.numberOfTouchesRequired= 3;
     threeFingerTouch.delegate = self;
     
@@ -66,6 +72,20 @@
     }
     
     [[self mapView] addGestureRecognizer:threeFingerTouch];
+    
+    //
+    //  Set up a gesture to add points to a working fence
+    //
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addPointToActiveFenceFromGesture:)];
+    
+    tapGesture.numberOfTouchesRequired = 1;
+    tapGesture.delegate = self;
+    [[self mapView] addGestureRecognizer:tapGesture];
+    
+    //
+    //
+    //
     
     [[self mapView] setDelegate:self];
     
@@ -171,16 +191,23 @@
 
  */
 
-- (void) newFenceWithTouches:(UITapGestureRecognizer *)gestureRecognizer{
+
+- (void) newFenceWithGesture:(UITapGestureRecognizer *)gestureRecognizer{
     
     [self newFence];
     
     for (NSInteger i = 0; i < 3; i++) {
+        
         CGPoint touch = [gestureRecognizer locationOfTouch:i inView:[self view]];
         [self addPointToActiveFenceAtPoint:touch];
     }
 
     [self renderAnnotations];
+}
+
+- (void)addPointToActiveFenceFromGesture:(UITapGestureRecognizer *)gestureRecognizer{
+    [self addPointToActiveFenceAtPoint:[gestureRecognizer locationOfTouch:0 inView:self.view]];
+    [self renderAnnotations];    
 }
 
 #pragma mark - Pin Actions
@@ -240,8 +267,8 @@
     if ([annotation isKindOfClass:[MKUserLocation class]]) {
         return nil;
     }
+    
     if([annotation isKindOfClass:[MKPolygon class]]){
-        
         
         static NSString *reuse = @"reuse";
         
@@ -297,8 +324,11 @@
             
             [deleteButton setBackgroundImage:[UIImage imageNamed:@"delete.png"] forState:UIControlStateNormal];
             
+
             [view setLeftCalloutAccessoryView:deleteButton];
-            view.backgroundColor = [UIColor clearColor];
+        
+            
+            [view setBackgroundColor:[UIColor clearColor]];
             
             //
             //
@@ -378,7 +408,9 @@
         //
         //
         
-        [pin setRightCalloutAccessoryView:deleteButton];
+        if([[[self workingGeofence] points] count] > 3){
+            [pin setRightCalloutAccessoryView:deleteButton];
+        }
         
         return pin;
     }
@@ -663,7 +695,7 @@
         if ([alertView textFieldAtIndex:0].text.length == 0) {
             [self showRenameAlert];
         }else{
-            [self.workingGeofence.name setString:[alertView textFieldAtIndex:0].text];
+            [self.workingGeofence setName:[alertView textFieldAtIndex:0].text];
             [self renderAndSave];
         }
     }

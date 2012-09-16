@@ -15,11 +15,6 @@
 @interface MBViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 
 @property (strong, nonatomic) IBOutlet MKMapView    *mapView;
-@property (strong, nonatomic) NSMutableArray *geofences;
-@property (strong, nonatomic) MBGeofence *workingGeofence;
-
-@property (strong, nonatomic) NSMutableArray *annotations;
-@property (strong, nonatomic) NSMutableArray *overlays;
 
 @property (strong, nonatomic) NSTimer *saveTimer;
 
