@@ -10,35 +10,25 @@
 
 @implementation MBGeofence
 
-@synthesize points;
-@synthesize name = _name;
-
 - (id)init{
     self = [super init];
     
     if (self) {
-        self.name = [@"Unnamed Fence" mutableCopy];
-        self.points = [[NSMutableArray alloc]init];
+        _name = [@"Unnamed Fence" mutableCopy];
+        _points = [@[] mutableCopy];
     }
     
     return self;
 }
 
 - (id) initWithName:(NSString*)name{
-    self = [super init];
+    self = [self init];
     
-    if (self) {
-        
-        if (name == nil) {
-            name = @"Unnamed Fence";
-        }
-        
-        self.points = [[NSMutableArray alloc] init];
-        self.name = [name mutableCopy];
+    if (self) {   
+        _name = name;
     }
     
     return self;
-    
 }
 
 - (void) addLocation:(CLLocationCoordinate2D)location{

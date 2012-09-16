@@ -12,9 +12,9 @@
 
 @interface MBGeofence : NSObject
 
-@property (strong, nonatomic) NSMutableArray *points;
+@property (nonatomic, strong) NSMutableArray *points;
 
-@property (strong, nonatomic) NSMutableString *name;
+@property (nonatomic, strong) NSString *name;
 
 - (id) initWithName:(NSString*)name;
 
