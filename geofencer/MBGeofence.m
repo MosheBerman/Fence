@@ -78,12 +78,12 @@
 
 
 - (BOOL) matchesPolygon:(MKPolygon *)polygon{
-    if(self.polygonRepresentation.pointCount != polygon.pointCount){
+    if([[self polygonRepresentation] pointCount] != [polygon pointCount]){
         return NO;
     }
     
     for (int i=0; i<self.polygonRepresentation.pointCount; i++) {
-        if((self.polygonRepresentation.points[i].x != polygon.points[i].x) || (self.polygonRepresentation.points[i].y != polygon.points[i].y)){
+        if([[self polygonRepresentation] points][i].x != [polygon points][i].x || [[self polygonRepresentation] points][i].y != [polygon points][i].y){
             return  NO;
         }
     }
