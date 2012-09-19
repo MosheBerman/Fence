@@ -35,7 +35,8 @@
 
 - (void) addLocation:(CLLocationCoordinate2D)location{
     MBCoordinate *coordinate = [[MBCoordinate alloc] initWithLatitude:location.latitude andLongitude:location.longitude];
-    [self.points addObject:coordinate];
+    [[self points] addObject:coordinate];
+    [self touch];
 }
 
 - (void) removeLocation:(CLLocationCoordinate2D)location{
@@ -50,13 +51,14 @@
         }
     }
     
-    [self.points removeObjectsInArray:discardedCoordinates];
+    [[self points] removeObjectsInArray:discardedCoordinates];
+    [self touch];
 }
 
 - (void) removeAllObjects{
     
-    [self.points removeAllObjects];
-    
+    [[self points] removeAllObjects];
+    [self touch];
 }
 
 #pragma mark - Polygon Methods
@@ -224,7 +226,12 @@
         //
         return result;
     }];
+    
+    [self touch];
 }
 
+- (void) touch{
+    [self setModifiedDate:[NSDate date]];
+}
 
 @end
