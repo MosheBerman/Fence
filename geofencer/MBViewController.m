@@ -92,8 +92,9 @@
     [segmentedControl addTarget:self action:@selector(changeAndSaveMapType:) forControlEvents:UIControlEventValueChanged];
     
     UIBarButtonItem *mapTypeButton = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
+    UIBarButtonItem *newFenceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFenceInMap)];
     
-    [self.navigationItem setLeftBarButtonItems:@[mapTypeButton] animated:YES];
+    [self.navigationItem setLeftBarButtonItems:@[newFenceButton, mapTypeButton] animated:YES];
     
     NSTimer *aTimer  = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(autosave) userInfo:nil repeats:YES];
     [self setSaveTimer:aTimer];
@@ -118,6 +119,7 @@
     [tapGesture setMinimumPressDuration:0.3f];
     [tapGesture setDelegate:self];
     [[self mapView] addGestureRecognizer:tapGesture];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -167,6 +169,48 @@
     
     [self addPointToActiveFenceAtPoint:[gestureRecognizer locationOfTouch:0 inView:self.view]];
     [self renderAnnotations];
+}
+
+#pragma mark - New Fence 
+
+- (void) newFenceInMap{
+    
+    [self newFence];
+    
+    const float kLengthOfSide = 96.0;
+    
+    const float kWorkingAngle = 90;
+    
+    const int kNumberOfSidesInNewFence = 4;
+    
+    for(int i=0; i< kNumberOfSidesInNewFence; i++){
+        
+        float workingAngle = kWorkingAngle * i;
+        
+        float adjustedAngle = workingAngle*3/2;
+        
+        //  Convert to radians
+        CGFloat angleInRadians = adjustedAngle*(M_PI/180);
+        
+        CGPoint point = CGPointZero;
+        
+        //  Calculate the x and Y coordinates
+        point.x = sin(angleInRadians);
+        point.y = cos(angleInRadians);
+        
+        //  Apply the scale factor
+        point.x *= kLengthOfSide;
+        point.y *= kLengthOfSide;
+        
+        //  Offset to the center
+        point.x += [[self mapView] frame].size.width/2;
+        point.y += [[self mapView] frame].size.height/2;
+        
+        [self addPointToActiveFenceAtPoint:point];
+    }
+    
+    [self renderAndSave];
+    
 }
 
 #pragma mark - Pin Actions
