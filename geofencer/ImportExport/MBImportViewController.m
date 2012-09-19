@@ -36,6 +36,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    [self configureButtons];
+    
+    [self setTitle:NSLocalizedString(@"Import Fences", @"Title for the import view.")];
 }
 
 - (void)didReceiveMemoryWarning
@@ -82,7 +85,9 @@
     
     NSUInteger section = [indexPath row];
     
-    [[cell textLabel] setText:@""];
+//    [[cell textLabel] setText:@""];
+    
+    return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
@@ -93,4 +98,28 @@
     return NSLocalizedString(@"Property Lists", @"A title for the section of the table which shows JSON files");
 }
 
+#pragma mark - UIBarButton Items
+
+- (void) configureButtons{
+    
+    
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(importAndDismiss)];
+    
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(importAndDismiss)];
+    
+    [[self navigationItem] setRightBarButtonItem:doneButton];
+    
+    [[self navigationItem] setLeftBarButtonItem:cancelButton];
+}
+
+- (void) importAndDismiss{
+    
+    
+    
+    [self dismiss];
+}
+
+- (void) dismiss{
+    [[[self navigationController] presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+}
 @end
