@@ -12,40 +12,21 @@
 
 
 - (void) saveAsSingleFileToCachesDirectory:(MBGeofenceCollection*)fences{
-    
-    NSURL *url = [[self applicationCachesDirectory] URLByAppendingPathComponent:@"Fences.plist"];
-    
-    if(![[self serializeFences:fences] writeToURL:url atomically:NO]){
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops",@"Whoops")
-                                                        message:NSLocalizedString(@"Your fences have not been saved.",@"Your fences have not been saved.")
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                              otherButtonTitles: nil];
-        
-        [alert show];
-        
-    }else{
-        
-        //
-        //  Save went well.
-        //
-    }
+    NSURL *url = [self applicationCachesDirectory];
+    [self saveFences:fences toDirectory:url];
 }
 
 
 - (void) saveIndividualFencesToCachesDirectory:(MBGeofenceCollection *)fences{
     
     BOOL failedToSaveAFence = NO;
+
+    NSURL *url = [self applicationDocumentsDirectory];
     
     for (MBGeofence *fence in [fences geofences]) {
-        NSString *name = [NSString stringWithFormat:@"%@.plist", fence.name];
+
+        [self saveFence:fence toDirectory:url asJSON:YES];
         
-        NSURL *url = [[self applicationCachesDirectory] URLByAppendingPathComponent:name ];
-        
-        if(![[fence asArray] writeToURL:url atomically:YES]){
-            failedToSaveAFence = YES;
-        }
     }
     
     if (failedToSaveAFence) {
@@ -144,6 +125,66 @@
     }
     
     return tempArray;
+}
+
+#pragma mark - Save Methods
+
+- (BOOL) saveFence:(MBGeofence *)fence toDirectory:(NSURL *)directory asJSON:(BOOL)useJSON{
+    
+    NSString *suffix = useJSON ? @"json" : @"plist";
+    
+    NSString *fileName = [NSString stringWithFormat:@"%@.%@", [fence name], suffix];
+    NSURL *url = [directory URLByAppendingPathComponent:fileName];
+    
+    NSArray *fenceArray = [fence asArray];
+    
+    if(useJSON){
+        NSOutputStream *output = [[NSOutputStream alloc] initToFileAtPath:[url path] append:NO];
+        
+        NSError *error = nil;
+        [NSJSONSerialization writeJSONObject:fenceArray toStream:output options:0 error:&error];
+        
+        return error == nil;
+    }
+    
+    if(![fenceArray writeToURL:url atomically:NO]){
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops",@"Whoops")
+                                                        message:NSLocalizedString(@"Your fences have not been saved.",@"Your fences have not been saved.")
+                                                       delegate:nil
+                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                                              otherButtonTitles: nil];
+        
+        [alert show];
+        
+    }else{
+        
+        //
+        //  Save went well.
+        //
+    }
+}
+
+- (BOOL) saveFences:(MBGeofenceCollection *)fences toDirectory:(NSURL *)directory{
+    
+    NSURL *url = [directory URLByAppendingPathComponent:@"Fences.plist"];
+    
+    if(![[self serializeFences:fences] writeToURL:url atomically:NO]){
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops",@"Whoops")
+                                                        message:NSLocalizedString(@"Your fences have not been saved.",@"Your fences have not been saved.")
+                                                       delegate:nil
+                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                                              otherButtonTitles: nil];
+        
+        [alert show];
+        
+    }else{
+        
+        //
+        //  Save went well.
+        //
+    }
 }
 
 #pragma mark - Significant Directories
