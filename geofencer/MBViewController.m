@@ -107,6 +107,16 @@
 #pragma mark - UIActionSheet Delegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    
+    
+    if ([actionSheet isEqual:[self mapTypeActionSheet]] ) {
+        if (buttonIndex < 3) {
+            [self changeAndSaveMapType:buttonIndex];
+            [self configureButtons];
+            return;
+        }
+    }
+    
     NSString *tappedButton = [actionSheet buttonTitleAtIndex:buttonIndex];
     
     if ([tappedButton isEqualToString:NSLocalizedString(@"Export to iTunes", @"The title for the export button")]) {
