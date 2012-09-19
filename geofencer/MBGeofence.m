@@ -14,8 +14,10 @@
     self = [super init];
     
     if (self) {
+        _creationDate = [NSDate date];        
         _name = [@"Unnamed Fence" mutableCopy];
         _points = [@[] mutableCopy];
+        _modifiedDate = [NSDate date];
     }
     
     return self;

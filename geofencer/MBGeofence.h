@@ -15,6 +15,8 @@
 @property (nonatomic, strong) NSMutableArray *points;
 
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, readonly, strong) NSDate *creationDate;
+@property (nonatomic, strong) NSDate *modifiedDate;
 
 - (id) initWithName:(NSString*)name;
 
