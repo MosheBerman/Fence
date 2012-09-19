@@ -83,26 +83,7 @@
     NSTimer *aTimer  = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(autosave) userInfo:nil repeats:YES];
     [self setSaveTimer:aTimer];
     
-    //
-    //  Set up a gesture recognizer for placing fences.
-    //  See this StackOverflow question for more: http://stackoverflow.com/questions/4317810/how-to-capture-tap-gesture-on-mkmapview
-    //
-    
-    UITapGestureRecognizer *threeFingerTouch = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(newFenceWithGesture:)];
-    [threeFingerTouch setNumberOfTouchesRequired:3];
-    [threeFingerTouch setDelegate:self];
-    
-    for (UIGestureRecognizer *gesture in [[self mapView] gestureRecognizers]) {
-        [gesture requireGestureRecognizerToFail:threeFingerTouch];
-    }
-    
-    [[self mapView] addGestureRecognizer:threeFingerTouch];
-    
-    UILongPressGestureRecognizer*tapGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(addPointToActiveFenceFromGesture:)];
-    [tapGesture setNumberOfTouchesRequired:1];
-    [tapGesture setMinimumPressDuration:0.3f];
-    [tapGesture setDelegate:self];
-    [[self mapView] addGestureRecognizer:tapGesture];
+    [self configureGestures];
     
 }
 
@@ -252,6 +233,31 @@
     UIBarButtonItem *mapTypeButton = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
     
     [[self navigationItem] setLeftBarButtonItems:@[mapTypeButton] animated:YES];
+    
+}
+
+- (void) configureGestures{
+    
+    //
+    //  Set up a gesture recognizer for placing fences.
+    //  See this StackOverflow question for more: http://stackoverflow.com/questions/4317810/how-to-capture-tap-gesture-on-mkmapview
+    //
+    
+    UITapGestureRecognizer *threeFingerTouch = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(newFenceWithGesture:)];
+    [threeFingerTouch setNumberOfTouchesRequired:3];
+    [threeFingerTouch setDelegate:self];
+    
+    for (UIGestureRecognizer *gesture in [[self mapView] gestureRecognizers]) {
+        [gesture requireGestureRecognizerToFail:threeFingerTouch];
+    }
+    
+    [[self mapView] addGestureRecognizer:threeFingerTouch];
+    
+    UILongPressGestureRecognizer*tapGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(addPointToActiveFenceFromGesture:)];
+    [tapGesture setNumberOfTouchesRequired:1];
+    [tapGesture setMinimumPressDuration:0.3f];
+    [tapGesture setDelegate:self];
+    [[self mapView] addGestureRecognizer:tapGesture];
     
 }
 
