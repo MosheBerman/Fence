@@ -29,7 +29,7 @@
 */
 
 - (MKAnnotationViewDragState)dragState{
-    return self.dragState;   
+    return self.dragState;
 }
 
 - (void)setDragState:(MKAnnotationViewDragState)newDragState animated:(BOOL)animated{
