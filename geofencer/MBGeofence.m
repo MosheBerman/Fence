@@ -24,7 +24,7 @@
 - (id) initWithName:(NSString*)name{
     self = [self init];
     
-    if (self) {   
+    if (self) {
         _name = name;
     }
     
@@ -70,9 +70,9 @@
     }
     
     MKPolygon *polygon = [MKPolygon polygonWithCoordinates:locations count:numberOfPoints];
-//    [polygon setTitle:[NSString stringWithFormat:@"Fence %i",self.tag]];
+    //    [polygon setTitle:[NSString stringWithFormat:@"Fence %i",self.tag]];
     
-//    NSLog(@"Polygon representation: %@", [polygon description]);
+    //    NSLog(@"Polygon representation: %@", [polygon description]);
     return polygon;
 }
 
@@ -105,13 +105,13 @@
 }
 
 //
-//  Pull out each point as a Dictionary and add it to an array. 
-//  
+//  Pull out each point as a Dictionary and add it to an array.
+//
 //  We do this because MBGeofences are made of MBCoordinates.
 //  MBCoordinates contain location and other app data. (Specifically,
 //  MBCoordinates also track if a given coordinate is dragging, so we
 //  can adjust it when it's finished dragging. Naturally, we don't
-//  need this data in the exported dataset, so we don't use it.) 
+//  need this data in the exported dataset, so we don't use it.)
 //
 
 - (NSArray *)asArray{
@@ -137,5 +137,82 @@
     return dictionary;
     
 }
+
+//
+//  Detect which coordinate is the closest to the supplied coordinate
+//
+
+- (MBCoordinate *) coordinateClosestToCoordinate:(MBCoordinate *)coordinate{
+    
+    if (![self points] || [[self points] count] < 2) {
+        return nil;
+    }
+
+    MBCoordinate *closestCoordinate = nil;
+
+    CGPoint closestDistance;
+
+
+    for(NSInteger  i = 0; i < [[self points] count]; i++){
+        if(coordinate == [self points][i]){
+            continue;
+        }
+        
+        if(!closestCoordinate){
+            closestCoordinate = [self points][i];
+            closestDistance = [self distanceBetweenCoordinate:coordinate andCoordinate:closestCoordinate];
+        }
+        
+        CGPoint nextDistance = [self distanceBetweenCoordinate:[self points][i] andCoordinate:closestCoordinate];
+        
+        if(nextDistance.x < closestDistance.x && nextDistance.y < closestDistance.y){
+            nextDistance = closestDistance;
+            closestCoordinate = [self points][i];
+        }
+        
+    }
+
+    return closestCoordinate;
+}
+
+//
+//  Determines the distance between two coordinates
+//
+
+- (CGPoint) distanceBetweenCoordinate:(MBCoordinate *)coordinate andCoordinate:(MBCoordinate *)anotherCoordinate{
+    
+    CGFloat xDistance, yDistance;
+    
+    xDistance = abs(coordinate.latitude-anotherCoordinate.latitude);
+    yDistance = abs(coordinate.longitude-anotherCoordinate.longitude);
+    
+    return CGPointMake(xDistance, yDistance);
+    
+}
+
+//
+//  Reorganizes the points based on closest distance
+//
+
+- (void) reorganizeByDistance{
+
+    MBCoordinate *nextCoordinate = [self points][0];
+    
+    NSMutableArray *newPoints = [@[] mutableCopy];
+    
+    [newPoints addObject:nextCoordinate];
+    
+    for (MBCoordinate *coordinate in [self points]) {
+        
+        MBCoordinate *closestCoordinate = [self coordinateClosestToCoordinate:nextCoordinate];
+        
+        if (![newPoints containsObject:closestCoordinate]) {
+            [newPoints addObject:closestCoordinate];
+            nextCoordinate = closestCoordinate;
+            continue;
+        }   
+    }
+}
+
 
 @end
