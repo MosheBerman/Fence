@@ -80,22 +80,6 @@
     
     [self configureButtons];
     
-    //
-    //  Set up a map type segmented control
-    //
-    
-    NSArray *mapTypes = @[NSLocalizedString(@"Standard", @"Standard"), NSLocalizedString(@"Satellite", @"Satellite"), NSLocalizedString(@"Hybrid", @"Hybrid")];
-    
-    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:mapTypes];
-    [segmentedControl setSegmentedControlStyle:UISegmentedControlStyleBar];
-    [segmentedControl setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults] integerForKey:@"mapType"]];
-    [segmentedControl addTarget:self action:@selector(changeAndSaveMapType:) forControlEvents:UIControlEventValueChanged];
-    
-    UIBarButtonItem *mapTypeButton = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
-    UIBarButtonItem *newFenceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFenceInMap)];
-    
-    [self.navigationItem setLeftBarButtonItems:@[newFenceButton, mapTypeButton] animated:YES];
-    
     NSTimer *aTimer  = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(autosave) userInfo:nil repeats:YES];
     [self setSaveTimer:aTimer];
     
@@ -224,7 +208,8 @@
     //
     
     [self.workingGeofence addLocation:touchMapCoordinate];
-        
+    
+    [[self workingGeofence] reorganizeByDistance];
 }
 
 #pragma mark - UI Setup
@@ -238,15 +223,37 @@
     //
     //  Create the action button
     //
+    //
     
     if (![self actionButton]) {
         UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(showActionSheet)];
         [self setActionButton:button];
     }
     
-    [self.navigationItem setRightBarButtonItems:@[[self actionButton]] animated:YES];
+    //
+    //  Create the New Fence button
+    //
     
-}   
+    UIBarButtonItem *newFenceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFenceInMap)];
+    
+    [[self navigationItem] setRightBarButtonItems:@[[self actionButton], newFenceButton] animated:YES];
+    
+    //
+    //  Set up a map type segmented control
+    //
+    
+    NSArray *mapTypes = @[NSLocalizedString(@"Standard", @"Standard"), NSLocalizedString(@"Satellite", @"Satellite"), NSLocalizedString(@"Hybrid", @"Hybrid")];
+    
+    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:mapTypes];
+    [segmentedControl setSegmentedControlStyle:UISegmentedControlStyleBar];
+    [segmentedControl setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults] integerForKey:@"mapType"]];
+    [segmentedControl addTarget:self action:@selector(changeAndSaveMapType:) forControlEvents:UIControlEventValueChanged];
+    
+    UIBarButtonItem *mapTypeButton = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
+    
+    [[self navigationItem] setLeftBarButtonItems:@[mapTypeButton] animated:YES];
+    
+}
 
 - (void)showActionSheet{
     if (![self actionSheet]) {
