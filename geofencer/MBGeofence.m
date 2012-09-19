@@ -197,9 +197,13 @@
 //
 //  Reorganizes the points based on closest distance
 //
+//  FIXME: Make this algorithm work.
+//
 
 - (void) reorganizeByDistance{
 
+    return;
+    
     if ([[self points] count] < 3) {
         return;
     }
