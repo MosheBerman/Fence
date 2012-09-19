@@ -103,7 +103,26 @@
     return YES;
 }
 
-#pragma mark - Gesture Handlers
+#pragma mark - UIGestureRecognizer Delegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+    for (UIView *subview in [[self mapView] subviews]) {
+        if ([[subview class] conformsToProtocol:@protocol(MKAnnotation) ]) {
+            if (CGRectContainsPoint([subview frame], [touch locationInView:[self view]])) {
+                return NO;
+            }
+        }
+    }
+    
+    return YES;
+}
+
+
+#pragma mark - Custom Gesture Handler
 
 - (void)newFenceWithGesture:(UITapGestureRecognizer *)gestureRecognizer{
     
@@ -632,24 +651,6 @@
     NSString *string = [fence name] ? [fence name] : @"No fence";
 //    NSLog(@"User is in fence called: %@", string);
 
-}
-
-#pragma mark - Gesture Recognizer
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
-}
-
--(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
-    for (UIView *subview in [[self mapView] subviews]) {
-        if ([[subview class] conformsToProtocol:@protocol(MKAnnotation) ]) {
-            if (CGRectContainsPoint([subview frame], [touch locationInView:[self view]])) {
-                return NO;
-            }
-        }
-    }
-    
-    return YES;
 }
 
 #pragma mark - Render and Save
