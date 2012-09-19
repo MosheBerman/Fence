@@ -14,7 +14,7 @@
 
 @interface MBViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 
-@property (strong, nonatomic) IBOutlet MKMapView    *mapView;
+@property (strong, nonatomic) IBOutlet MKMapView *mapView;
 
 @property (strong, nonatomic) NSTimer *saveTimer;
 

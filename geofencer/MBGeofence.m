@@ -42,7 +42,7 @@
     
     NSMutableArray *discardedCoordinates = [[NSMutableArray alloc] init];
     
-    for (MBCoordinate *storedCoordinate in self.points) {
+    for (MBCoordinate *storedCoordinate in [self points]) {
         if ([storedCoordinate isEqual:coordinate]) {
             [discardedCoordinates addObject:storedCoordinate];
         }
@@ -152,8 +152,8 @@
 
     CGPoint closestDistance;
 
-
     for(NSInteger  i = 0; i < [[self points] count]; i++){
+        
         if(coordinate == [self points][i]){
             continue;
         }
@@ -196,22 +196,32 @@
 
 - (void) reorganizeByDistance{
 
-    MBCoordinate *nextCoordinate = [self points][0];
-    
-    NSMutableArray *newPoints = [@[] mutableCopy];
-    
-    [newPoints addObject:nextCoordinate];
-    
-    for (MBCoordinate *coordinate in [self points]) {
-        
-        MBCoordinate *closestCoordinate = [self coordinateClosestToCoordinate:nextCoordinate];
-        
-        if (![newPoints containsObject:closestCoordinate]) {
-            [newPoints addObject:closestCoordinate];
-            nextCoordinate = closestCoordinate;
-            continue;
-        }   
+    if ([[self points] count] < 3) {
+        return;
     }
+    
+    id nextCoordinate = [self points][0];
+    
+    [[self points] sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+       
+        CGPoint distanceBetweenOriginalAndFirst = [self distanceBetweenCoordinate:obj1 andCoordinate:nextCoordinate];
+        CGPoint distanceBetweenOriginalAndSecond = [self distanceBetweenCoordinate:obj2 andCoordinate:nextCoordinate];
+        
+        __block id nextCoordinate;
+        
+        nextCoordinate = obj1;
+        
+        NSComparisonResult result = NSOrderedAscending;
+        
+        if (distanceBetweenOriginalAndFirst.x > distanceBetweenOriginalAndSecond.x && distanceBetweenOriginalAndFirst.y > distanceBetweenOriginalAndSecond.y) {
+            result = NSOrderedDescending;
+        }else if (distanceBetweenOriginalAndFirst.x == distanceBetweenOriginalAndSecond.x && distanceBetweenOriginalAndFirst.y == distanceBetweenOriginalAndSecond.y) {
+            result = NSOrderedSame;
+        }
+        
+        //
+        return result;
+    }];
 }
 
 

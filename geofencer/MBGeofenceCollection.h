@@ -8,6 +8,27 @@
 
 #import <Foundation/Foundation.h>
 
+#import <CoreLocation/CoreLocation.h>
+
+#import "MBGeofence.h"
+
 @interface MBGeofenceCollection : NSObject
+
+@property (strong, nonatomic) NSMutableArray *geofences;
+@property (strong, nonatomic) MBGeofence *workingGeofence;
+
+- (MBGeofence *) newFence;
+//- (void) addFence:(MBGeofence *)fence andMakeActive:(BOOL)newFenceShouldBecomeActive;
+- (void) deleteActiveFence;
+
+- (BOOL) workingFencesHasMaximumNumberOfCoordinates;
+- (BOOL) workingFencesHasMinimumNumberOfCoordinates;
+
+- (void) addPointToWorkingFence:(CLLocationCoordinate2D)point;
+- (void) removePointFromWorkingFence:(CLLocationCoordinate2D)point;
+
+- (NSInteger) numberOfFences;
+
+- (MBGeofence *)fenceContainingPoint:(CLLocationCoordinate2D)location;
 
 @end

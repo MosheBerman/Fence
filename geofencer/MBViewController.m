@@ -9,12 +9,13 @@
 #import "MBViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
-#import "MBMultifingerTapGestureRecognizer.h"
+#import "MBGeofenceCollection.h"
+#import "MBSaveManager.h"
 
 @interface MBViewController () <UIGestureRecognizerDelegate>
 
-@property (strong, nonatomic) NSMutableArray *geofences;
-@property (strong, nonatomic) MBGeofence *workingGeofence;
+@property (strong, nonatomic) MBGeofenceCollection *fences;
+@property (strong, nonatomic) MBSaveManager *saveManager;
 
 @property (strong, nonatomic) NSMutableArray *annotations;
 @property (strong, nonatomic) NSMutableArray *overlays;
@@ -62,7 +63,7 @@
     
     if (self) {
         
-        _geofences = [@[] mutableCopy];
+        _fences = [[MBGeofenceCollection alloc] init];
         _annotations = [@[] mutableCopy];
         _isDragging = NO;
     }
@@ -78,12 +79,11 @@
     NSString *title = NSLocalizedString(@"Fence", @"Fence");
     [self setTitle:title];
     
-    [self configureButtons];
-    
     NSTimer *aTimer  = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(autosave) userInfo:nil repeats:YES];
     [self setSaveTimer:aTimer];
     
     [self configureGestures];
+    [self configureButtons];
     
 }
 
@@ -95,7 +95,7 @@
     //
     
     //  TODO: This could potentially be a performance killer if there are a lot of points.
-    [self saveIndividualFencesToCachesDirectory];
+    [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
     
 }
 
@@ -111,7 +111,7 @@
         return;
     }
     
-    [self newFence];
+    [[self fences] newFence];
     
     for (NSInteger i = 0; i < 3; i++) {
         
@@ -128,7 +128,7 @@
         return;
     }
     
-    if ([[[self workingGeofence] points] count] >= 20) {
+    if ([[self fences] workingFencesHasMaximumNumberOfCoordinates]) {
         return;
     }
     
@@ -140,7 +140,7 @@
 
 - (void) newFenceInMap{
     
-    [self newFence];
+    [[self fences]newFence];
     
     const float kLengthOfSide = 96.0;
     
@@ -174,8 +174,7 @@
         [self addPointToActiveFenceAtPoint:point];
     }
     
-    [self renderAndSave];
-    
+    [self renderAnnotations];
 }
 
 #pragma mark - Pin Actions
@@ -188,9 +187,7 @@
     //  Add a location to the working geofence
     //
     
-    [self.workingGeofence addLocation:touchMapCoordinate];
-    
-    [[self workingGeofence] reorganizeByDistance];
+    [[self fences] addPointToWorkingFence:touchMapCoordinate];
 }
 
 #pragma mark - UI Setup
@@ -420,10 +417,10 @@
         //
         //
         
-        if([[[self workingGeofence] points] count] > 3){
-            [pin setRightCalloutAccessoryView:deleteButton];
-        }else{
+        if([[self fences] workingFencesHasMinimumNumberOfCoordinates]){
             [pin setRightCalloutAccessoryView:nil];
+        }else{
+            [pin setRightCalloutAccessoryView:deleteButton];
         }
         
         return pin;
@@ -450,7 +447,7 @@
 - (void)mapView:(MKMapView *)mapView didAddOverlayViews:(NSArray *)overlayViews{
     for(MKPolygonView *polygonView in overlayViews){        
         
-        for (MBCoordinate *coordinate in self.workingGeofence.points) {
+        for (MBCoordinate *coordinate in [[self fences] workingGeofence].points) {
             
             /*
              
@@ -476,7 +473,7 @@
             //
             
             
-            if ([self.workingGeofence matchesPolygon:polygonView.polygon]) {
+            if ([[[self fences  ]workingGeofence] matchesPolygon:polygonView.polygon]) {
                 polygonView.fillColor = [[UIColor redColor] colorWithAlphaComponent:0.4];
                 polygonView.strokeColor =  [[UIColor redColor] colorWithAlphaComponent:0.8];
                 polygonView.lineWidth = 4.0;
@@ -500,7 +497,7 @@
         
         // Tell the appropriate MBCoordinate that it's time to drag
         
-        for (MBCoordinate *coordinate in self.workingGeofence.points) {
+        for (MBCoordinate *coordinate in [[[self fences] workingGeofence] points]) {
             if ([coordinate isEqual:tempCoordinate]) {
                 [coordinate setIsDragging:YES];
             }
@@ -510,7 +507,7 @@
         
         //  Store the new location and tell the annotation it's done
         
-        for (MBCoordinate *coordinate in self.workingGeofence.points) {
+        for (MBCoordinate *coordinate in [[[self fences] workingGeofence] points]) {
             if ([coordinate isDragging]) {
                 [coordinate setIsDragging:NO];
                 coordinate.latitude = annotationCoordinate.latitude;
@@ -536,7 +533,7 @@
     //
     
     if ([[view annotation] isKindOfClass:[MKPolygon class]]) {
-        for (MBGeofence *fence in self.geofences) {
+        for (MBGeofence *fence in [[self fences] geofences]) {
             
             //
             //  When a fence annotation is tapped,
@@ -550,9 +547,9 @@
             //
             
             if ([fence matchesPolygon:((MKPolygon *)[view annotation])]) {
-                if ([fence isEqual:self.workingGeofence])return;
+                if ([fence isEqual:[[self fences]workingGeofence]])return;
                 
-                self.workingGeofence = fence;
+                [[self fences] setWorkingGeofence: fence];
                 [self renderAnnotations];
                 
                 return;
@@ -567,16 +564,9 @@
         
         if ([[view leftCalloutAccessoryView] isEqual:control]) {
             
-            [self.geofences removeObject:self.workingGeofence];
-            [self.workingGeofence removeAllObjects];            
-            self.workingGeofence = nil;
+            [[self fences] deleteActiveFence];
             
-            if(self.geofences.count == 0){
-                [self newFence];
-                [self renderAndSave];
-            }
-            
-            [self renderAndSave];
+            [self renderAnnotations];
             
         }else if([[view rightCalloutAccessoryView] isEqual:control]){
             
@@ -587,14 +577,14 @@
             [self showRenameAlert];
         }
     }else{
-        [self.workingGeofence removeLocation:[view.annotation coordinate]];
-        [self renderAndSave];
+        [[self fences] removePointFromWorkingFence:[[view annotation] coordinate]];
+        [self renderAnnotations];
     }
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
     
-    MBGeofence *fence = [self fenceContainingPoint:userLocation.location.coordinate];
+    MBGeofence *fence = [[self fences] fenceContainingPoint:userLocation.location.coordinate];
     NSString *string = [fence name] ? [fence name] : @"No fence";
 //    NSLog(@"User is in fence called: %@", string);
 
@@ -632,7 +622,7 @@
 
         NSInteger numberOfTouches = [gestureRecognizer numberOfTouches];
         
-        MBGeofence *fence = [[MBGeofence alloc] initWithName:@"New Fence"];
+        MBGeofence *fence = [[self fences] newFence];
         
         for (NSInteger i = 0; i < numberOfTouches; i++) {
             
@@ -643,8 +633,6 @@
             [fence addLocation:touchMapCoordinate];
         }
         
-        [self.geofences addObject:fence];
-        self.workingGeofence = fence;
     }
 }
 
@@ -653,7 +641,7 @@
 #pragma mark - Render and Save
 
 - (void) renderAndSave{
-    [self saveIndividualFencesToCachesDirectory];
+    [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
     [self renderAnnotations];
 }
 
@@ -683,8 +671,8 @@
         }
     }
     
-    for (NSInteger i=0;i<self.geofences.count;i++) {
-        MBGeofence *fence = (self.geofences)[i];
+    for (NSInteger i=0;i<[[self fences] numberOfFences];i++) {
+        MBGeofence *fence = [[self fences] geofences][i];
         MKPolygon *polygon = [fence polygonRepresentation];
         polygon.title = [fence name];
         [self.mapView addAnnotation:polygon];
@@ -693,7 +681,7 @@
         [self.annotations addObject:polygon];
     }
     
-    for (MBCoordinate *coordinate in self.workingGeofence.points) {
+    for (MBCoordinate *coordinate in [[[self fences] workingGeofence] points]) {
         
         NSString *locationAsString = [NSString stringWithFormat:@"%f, %f", coordinate.latitude, coordinate.longitude];
         MKPointAnnotation *mapPointAnnotation = [[MKPointAnnotation alloc] init];
@@ -713,13 +701,13 @@
                                                    delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@"OK", nil];
     [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
     [[alert textFieldAtIndex:0] setAutocapitalizationType:UITextAutocapitalizationTypeWords];
-    [[alert textFieldAtIndex:0] setText:self.workingGeofence.name];
+    [[alert textFieldAtIndex:0] setText:[[[self fences]workingGeofence] name]];
     [[alert textFieldAtIndex:0] setClearButtonMode:UITextFieldViewModeAlways];
     [alert show];
 }
 
 - (void) showExportView{
-    [self saveToDocumentsDirectory];
+    [[self saveManager] saveToDocumentsDirectory:[self fences]];
 }
 
 #pragma mark - Alert View Delegate
@@ -729,8 +717,8 @@
         if ([alertView textFieldAtIndex:0].text.length == 0) {
             [self showRenameAlert];
         }else{
-            [self.workingGeofence setName:[alertView textFieldAtIndex:0].text];
-            [self renderAndSave];
+            [[[self fences] workingGeofence] setName:[alertView textFieldAtIndex:0].text];
+            [self renderAnnotations];
         }
     }
 }
@@ -743,107 +731,9 @@
     
 }
 
-#pragma mark - Add and Remove fences
-
-- (void)newFence{
-    
-    //  Don't allow the user to create a new fence 
-    //  if the current one is empty, since there's no point
-    if (self.workingGeofence != nil && self.workingGeofence.points.count == 0) {
-        return;
-    }
-    
-    MBGeofence *fence = [[MBGeofence alloc] init];
-    [self.geofences addObject:fence];   
-    self.workingGeofence = fence;
-    
-}
-
-- (void)setActiveFenceWithIndex:(NSInteger)index{
-    if (self.geofences.count > index && index >= 0) {
-        self.workingGeofence = (self.geofences)[index];
-    }
-}
-
-- (void)deleteFenceAtIndex:(NSInteger)index{
-    /*
-     //  Add a new fence if we're the current fence. This avoids having zero fences.
-     if ([self.workingGeofence isEqual:[self.geofences objectAtIndex:index]]) {
-     [self newFence];
-     }
-     */
-    
-    if(self.geofences.count > 0 && self.geofences.count > index){
-        [self.geofences removeObjectAtIndex:index];
-    }
-    
-    NSLog(@"Fences: %@", [self.geofences description]);
-}
 
 
 #pragma mark - Save Functionality
-
-- (void) saveAsSingleFileToCachesDirectory{
-    
-    NSURL *url = [[self applicationCachesDirectory] URLByAppendingPathComponent:@"Fences.plist"];
-    
-    if(![[self serializeFences] writeToURL:url atomically:NO]){
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops",@"Whoops")
-                                                        message:NSLocalizedString(@"Your fences have not been saved.",@"Your fences have not been saved.") 
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                              otherButtonTitles: nil];
-        
-        [alert show];        
-        
-    }else{
-        
-    }     
-}
-
-- (void) saveIndividualFencesToCachesDirectory{
-    
-    BOOL failedToSaveAFence = NO;
-    
-    for (MBGeofence *fence in self.geofences) {
-        NSString *name = [NSString stringWithFormat:@"%@.plist", fence.name];
-        
-        NSURL *url = [[self applicationCachesDirectory] URLByAppendingPathComponent:name ];
-        
-        if(![[fence asArray] writeToURL:url atomically:YES]){
-            failedToSaveAFence = YES;
-        }
-    }
-    
-    if (failedToSaveAFence) {
-        NSLog(@"There was an error saving one or more fences.");
-    }
-    
-}
-- (void)saveToDocumentsDirectory{
-    NSURL *url = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Fences.plist"];
-    
-    if(![[self serializeFences] writeToURL:url atomically:NO]){
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops",@"Whoops")
-                                                        message:NSLocalizedString(@"Your fences have not been exported.",@"Your fences have not been exported.") 
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                              otherButtonTitles: nil];
-        
-        [alert show];        
-        
-    }else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Success",@"Success")
-                                                        message:NSLocalizedString(@"Your fences have been exported to the documents directory. You can retrieve them in iTunes.",@"Your fences have been exported to the documents directory. You can retrieve them in iTunes.") 
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                              otherButtonTitles: nil];
-        
-        [alert show];
-    }
-}
 
 - (void) autosave{
     
@@ -853,153 +743,7 @@
     
     //  TODO: This could potentially be a performance killer if there are a lot of points.
     
-    [self saveIndividualFencesToCachesDirectory];
-}
-
-#pragma mark - Serialized and Deserialize
-
-//
-//  Because geofences contain custom classes,
-//  I need to convert those to NSDictionary representations.
-//
-
-- (NSArray *)serializeFences{
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    
-    for (NSInteger i=0; i<self.geofences.count; i++) {
-        [array addObject:[(self.geofences)[i] asDictionary]];
-    }
-    
-    return array;
-}
-
-- (NSArray *)deserializeFencesAtURL:(NSURL*)url{
-    
-    NSMutableArray *fences = [[NSMutableArray alloc] initWithContentsOfURL:url];
-    
-    if (!fences) {
-        
-        NSLog(@"Failed to import.");
-        
-        return nil;
-    }
-    
-    if (fences.count == 0) {
-        NSLog(@"Zero fences.");
-        return nil;
-    }
-    
-    NSMutableArray *tempArray = [[NSMutableArray alloc] init];
-    
-    //
-    //  Iterate the fences
-    //
-    
-    for (NSInteger i = 0; i<fences.count; i++) {
-        
-        NSDictionary *dictionary = fences[i];
-        MBGeofence *fence = [[MBGeofence alloc] initWithName:dictionary[@"name"]];
-        
-        NSArray *coords = dictionary[@"coordinates"];
-        
-        //
-        //  Iterate the coordinates
-        //
-        
-        for (NSInteger j =0; j<coords.count; j++) {
-            NSDictionary *coordDict = coords[j];
-            CLLocationCoordinate2D location = CLLocationCoordinate2DMake([coordDict[@"latitude"] doubleValue], [coordDict[@"longitude"] doubleValue]);
-            [fence addLocation:location];
-        }
-        
-        //
-        //
-        //
-        
-        [tempArray addObject:fence];
-    }
-    
-    return tempArray;
-}
-
-#pragma mark - Significant Directories
-
-//
-// Returns the URL to the application's Documents directory.
-//
-
-- (NSURL *)applicationDocumentsDirectory
-{
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
-//
-// Returns the URL to the application's Documents directory.
-//
-- (NSURL *)applicationCachesDirectory
-{
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
-#pragma mark - Geofence Containment Checking
-
-
-//
-//  This function is taken from StackOverflow:
-//
-//  http://stackoverflow.com/questions/217578/point-in-polygon-aka-hit-test
-//
-//  It's based upon this:
-//
-//  http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-//
-
-
-int pnpoly(int nvert, double *vertx, double *verty, double testx, double testy)
-{
-    int i, j, c = 0;
-    for (i = 0, j = nvert-1; i < nvert; j = i++) {
-        if ( ((verty[i]>testy) != (verty[j]>testy)) &&
-            (testx < (vertx[j]-vertx[i]) * (testy-verty[i]) / (verty[j]-verty[i]) + vertx[i]) )
-            c = !c;
-    }
-    return c;
-}
-
-//
-//  Returns the fence containing a given location
-//
-
-- (MBGeofence *)fenceContainingPoint:(CLLocationCoordinate2D)location{
-
-    MBGeofence *f = nil;
-    
-    for (MBGeofence *fence in self.geofences) {
-        
-        const int count = fence.polygonRepresentation.pointCount;
-        
-        double vertx[count];
-        double verty[count];    
-        
-        for (int i=0; i<count; i++) {
-            
-            CLLocationCoordinate2D coord = [(fence.points)[i] CLLocationCoordinate2DRepresentation];
-            
-            vertx[i] = coord.latitude;
-            verty[i] = coord.longitude;
-            
-        }
-        
-        int result = pnpoly(count, vertx, verty, location.latitude, location.longitude);
-        
-        if (result == 1) {
-            f = fence;
-        }
-    }
-    
-//    NSLog(@"Result is:%@", [f.name description]);
-    
-    return f;
+    [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
 }
 
 @end

@@ -8,8 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		461DFDDA155B874400B62E4B /* MBPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 461DFDD9155B874400B62E4B /* MBPointAnnotation.m */; };
+		466A889116057C38006B5A92 /* MBGeofenceCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 466A889016057C38006B5A92 /* MBGeofenceCollection.m */; };
+		466CEB68160A04FC00A73D90 /* MBSaveManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 466CEB67160A04FC00A73D90 /* MBSaveManager.m */; };
 		468073361559D4E600D96632 /* MBAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 468073351559D4E600D96632 /* MBAnnotationView.m */; };
-		468D573215DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 468D573115DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.m */; };
 		468FB22E155710BA00AA0AFD /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 468FB22D155710BA00AA0AFD /* MessageUI.framework */; };
 		468FB2321557197B00AA0AFD /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 468FB2301557197B00AA0AFD /* delete.png */; };
 		468FB2331557197B00AA0AFD /* delete@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 468FB2311557197B00AA0AFD /* delete@2x.png */; };
@@ -35,10 +36,12 @@
 /* Begin PBXFileReference section */
 		461DFDD8155B874400B62E4B /* MBPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBPointAnnotation.h; path = Pins/MBPointAnnotation.h; sourceTree = "<group>"; };
 		461DFDD9155B874400B62E4B /* MBPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBPointAnnotation.m; path = Pins/MBPointAnnotation.m; sourceTree = "<group>"; };
+		466A888F16057C38006B5A92 /* MBGeofenceCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBGeofenceCollection.h; sourceTree = "<group>"; };
+		466A889016057C38006B5A92 /* MBGeofenceCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBGeofenceCollection.m; sourceTree = "<group>"; };
+		466CEB66160A04FC00A73D90 /* MBSaveManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBSaveManager.h; sourceTree = "<group>"; };
+		466CEB67160A04FC00A73D90 /* MBSaveManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBSaveManager.m; sourceTree = "<group>"; };
 		468073341559D4E600D96632 /* MBAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBAnnotationView.h; path = Pins/MBAnnotationView.h; sourceTree = "<group>"; };
 		468073351559D4E600D96632 /* MBAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBAnnotationView.m; path = Pins/MBAnnotationView.m; sourceTree = "<group>"; };
-		468D573015DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBMultifingerTapGestureRecognizer.h; path = "Gesture Recognizer/MBMultifingerTapGestureRecognizer.h"; sourceTree = "<group>"; };
-		468D573115DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBMultifingerTapGestureRecognizer.m; path = "Gesture Recognizer/MBMultifingerTapGestureRecognizer.m"; sourceTree = "<group>"; };
 		468FB22D155710BA00AA0AFD /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		468FB2301557197B00AA0AFD /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = delete.png; path = Images/delete.png; sourceTree = "<group>"; };
 		468FB2311557197B00AA0AFD /* delete@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "delete@2x.png"; path = "Images/delete@2x.png"; sourceTree = "<group>"; };
@@ -87,9 +90,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		46A30F771557830E0021D129 /* Location Structs */ = {
+		46A30F771557830E0021D129 /* Model Objects */ = {
 			isa = PBXGroup;
 			children = (
+				466A888F16057C38006B5A92 /* MBGeofenceCollection.h */,
+				466A889016057C38006B5A92 /* MBGeofenceCollection.m */,
 				46CA7D751556246D00AFA666 /* MBGeofence.h */,
 				46CA7D761556246D00AFA666 /* MBGeofence.m */,
 				46CA7D7D15562D0400AFA666 /* MBCoordinate.h */,
@@ -97,7 +102,7 @@
 				468073341559D4E600D96632 /* MBAnnotationView.h */,
 				468073351559D4E600D96632 /* MBAnnotationView.m */,
 			);
-			name = "Location Structs";
+			name = "Model Objects";
 			sourceTree = "<group>";
 		};
 		46CA7D3F1556188E00AFA666 = {
@@ -144,9 +149,9 @@
 				46A30F7B1557FBF00021D129 /* MBExportViewController.xib */,
 				461DFDD8155B874400B62E4B /* MBPointAnnotation.h */,
 				461DFDD9155B874400B62E4B /* MBPointAnnotation.m */,
-				468D573015DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.h */,
-				468D573115DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.m */,
-				46A30F771557830E0021D129 /* Location Structs */,
+				466CEB66160A04FC00A73D90 /* MBSaveManager.h */,
+				466CEB67160A04FC00A73D90 /* MBSaveManager.m */,
+				46A30F771557830E0021D129 /* Model Objects */,
 				46CA7D551556188E00AFA666 /* Supporting Files */,
 			);
 			path = geofencer;
@@ -268,7 +273,8 @@
 				46A30F7C1557FBF00021D129 /* MBExportViewController.m in Sources */,
 				468073361559D4E600D96632 /* MBAnnotationView.m in Sources */,
 				461DFDDA155B874400B62E4B /* MBPointAnnotation.m in Sources */,
-				468D573215DCCF8D0019190F /* MBMultifingerTapGestureRecognizer.m in Sources */,
+				466A889116057C38006B5A92 /* MBGeofenceCollection.m in Sources */,
+				466CEB68160A04FC00A73D90 /* MBSaveManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
