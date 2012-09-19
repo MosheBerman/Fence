@@ -213,5 +213,37 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
+#pragma mark - File Reading
+
+- (NSUInteger) numberOfJSONFilesAvailableForReading{
+    
+    NSString *path = [[self applicationDocumentsDirectory] path];
+    
+    //  TODO: Filter by type
+    
+    return [[self contentsOfDirectoryAtPath:path] count];
+}
+
+- (NSUInteger) numberOfXMLFilesAvailableForReading{
+    NSString *path = [[self applicationDocumentsDirectory] path];
+    
+    //  TODO: Filter by type
+    
+    return [[self contentsOfDirectoryAtPath:path] count];
+}
+
+
+- (NSArray *)contentsOfDirectoryAtPath:(NSString *)path{
+
+    
+    NSError *error = nil;
+    
+    NSArray *results = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:&error];
+    
+    
+    
+    return results;
+}
+
 
 @end

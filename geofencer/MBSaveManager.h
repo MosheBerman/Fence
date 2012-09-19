@@ -20,4 +20,9 @@
 
 - (void)saveToDocumentsDirectory:(MBGeofenceCollection *)fences;
 
+
+#pragma mark - File Reading
+
+- (NSUInteger) numberOfJSONFilesAvailableForReading;
+- (NSUInteger) numberOfXMLFilesAvailableForReading;
 @end
