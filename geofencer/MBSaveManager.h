@@ -25,4 +25,7 @@
 
 - (NSUInteger) numberOfJSONFilesAvailableForReading;
 - (NSUInteger) numberOfXMLFilesAvailableForReading;
+
+- (NSArray *) XMLFilesAvailableForReading;
+- (NSArray *) JSONFilesAvailableForReading;
 @end

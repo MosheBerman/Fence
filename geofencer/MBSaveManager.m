@@ -224,20 +224,11 @@
 #pragma mark - File Reading
 
 - (NSUInteger) numberOfJSONFilesAvailableForReading{
-    
-    NSString *path = [[self applicationDocumentsDirectory] path];
-    
-    //  TODO: Filter by type
-    
-    return [[self contentsOfDirectoryAtPath:path] count];
+    return [[self JSONFilesAvailableForReading] count];
 }
 
 - (NSUInteger) numberOfXMLFilesAvailableForReading{
-    NSString *path = [[self applicationDocumentsDirectory] path];
-    
-    //  TODO: Filter by type
-    
-    return [[self contentsOfDirectoryAtPath:path] count];
+    return [[self XMLFilesAvailableForReading] count];
 }
 
 
@@ -248,9 +239,42 @@
     
     NSArray *results = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:&error];
     
-    
+    if (error) {
+        return nil;
+    }
     
     return results;
+}
+
+- (NSArray *) XMLFilesAvailableForReading{
+    
+    
+    NSString *applicationDocuments = [[self applicationDocumentsDirectory] path];
+    
+    NSArray *unfilteredResults = [self contentsOfDirectoryAtPath:applicationDocuments];
+    
+    NSPredicate *containsXML = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        
+        return [evaluatedObject rangeOfString:@".plist"].location != NSNotFound;
+        
+    }];
+    
+    return [unfilteredResults filteredArrayUsingPredicate:containsXML];
+}
+
+- (NSArray *) JSONFilesAvailableForReading{
+    
+    NSString *applicationDocuments = [[self applicationDocumentsDirectory] path];
+    
+    NSArray *unfilteredResults = [self contentsOfDirectoryAtPath:applicationDocuments];
+    
+    NSPredicate *containsXML = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        
+        return [evaluatedObject rangeOfString:@".json"].location != NSNotFound;
+        
+    }];
+    
+    return [unfilteredResults filteredArrayUsingPredicate:containsXML];
 }
 
 
