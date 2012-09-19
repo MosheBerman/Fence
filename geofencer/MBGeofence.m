@@ -135,9 +135,8 @@
 - (NSDictionary*) asDictionary{
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     
-    dictionary[@"coordinates"] = [self asArray];
-    dictionary[@"name"] = self.name;
-    
+    dictionary[@"coordinates"] = @[[self asArray]];
+    dictionary[@"type"] = @"MultiPolygon";
     return dictionary;
     
 }

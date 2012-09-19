@@ -26,7 +26,12 @@
 - (MKPolygon*) polygonRepresentation;
 - (BOOL) matchesPolygon:(MKPolygon *)polygon;
 
+//
+//  Export methods
+//
+
 - (NSArray *)asArray;
+- (NSDictionary*) asDictionary;
 
 - (void) removeAllObjects;
 
