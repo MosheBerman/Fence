@@ -60,6 +60,13 @@
     [self setWorkingGeofence:nil];
 }
 
+
+#pragma mark - Active Fence
+
+- (void)deactivateActiveFence{
+    [self setWorkingGeofence:nil];
+}
+
 #pragma mark - Bounds Checking
 
 - (BOOL)workingFencesHasMaximumNumberOfCoordinates{

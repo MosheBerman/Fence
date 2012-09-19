@@ -21,6 +21,8 @@
 //- (void) addFence:(MBGeofence *)fence andMakeActive:(BOOL)newFenceShouldBecomeActive;
 - (void) deleteActiveFence;
 
+- (void) deactivateActiveFence;
+
 - (BOOL) workingFencesHasMaximumNumberOfCoordinates;
 - (BOOL) workingFencesHasMinimumNumberOfCoordinates;
 
