@@ -450,6 +450,7 @@
             //
             
             UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+            [[infoButton superview] setClipsToBounds:NO];
             [annotationView setRightCalloutAccessoryView:infoButton];
         }                
         
