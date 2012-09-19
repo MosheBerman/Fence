@@ -19,6 +19,9 @@
 @property (strong, nonatomic) NSMutableArray *annotations;
 @property (strong, nonatomic) NSMutableArray *overlays;
 
+@property(assign, nonatomic) BOOL isDragging;
+
+
 @end
 
 @implementation MBViewController
@@ -61,6 +64,7 @@
         
         _geofences = [@[] mutableCopy];
         _annotations = [@[] mutableCopy];
+        _isDragging = NO;
     }
     
     return self;
@@ -153,7 +157,7 @@
 
 - (void)addPointToActiveFenceFromGesture:(UITapGestureRecognizer *)gestureRecognizer{
     
-    if (gestureRecognizer.state != UIGestureRecognizerStateEnded){
+    if (gestureRecognizer.state != UIGestureRecognizerStateEnded || [self isDragging]){
         return;
     }
     
@@ -435,6 +439,8 @@
     
     if (newState == MKAnnotationViewDragStateStarting) {
         
+        [self setIsDragging:YES];
+        
         // Tell the appropriate MBCoordinate that it's time to drag
         
         for (MBCoordinate *coordinate in self.workingGeofence.points) {
@@ -458,6 +464,7 @@
         
     }else if(newState == MKAnnotationViewDragStateNone && oldState == MKAnnotationViewDragStateEnding){
         [self renderAndSave];
+        [self setIsDragging:NO];
     }
 }
 
@@ -592,8 +599,6 @@
     [self saveIndividualFencesToCachesDirectory];
     [self renderAnnotations];
 }
-
-#pragma mark - Render Annotations
 
 - (void)renderAnnotations{
     
