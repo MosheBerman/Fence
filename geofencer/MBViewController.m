@@ -652,28 +652,6 @@
     return YES;
 }
 
-- (void) handleGesture: (UIGestureRecognizer *) gestureRecognizer{
-    
-    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
-
-        NSInteger numberOfTouches = [gestureRecognizer numberOfTouches];
-        
-        MBGeofence *fence = [[self fences] newFence];
-        
-        for (NSInteger i = 0; i < numberOfTouches; i++) {
-            
-            CGPoint point = [gestureRecognizer locationOfTouch:i inView:[self mapView]];
-            
-            CLLocationCoordinate2D touchMapCoordinate = [_mapView convertPoint:point toCoordinateFromView:self.mapView];
-            
-            [fence addLocation:touchMapCoordinate];
-        }
-        
-    }
-}
-
-
-
 #pragma mark - Render and Save
 
 - (void) renderAndSave{
