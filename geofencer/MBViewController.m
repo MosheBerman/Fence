@@ -89,7 +89,7 @@
 
 //
 //  Save the changes
-//  FIXME: This could potentially be a performance killer if there are a lot of points.
+//  FIXME: Saving on quit could potentially be a performance killer if there are a lot of points.
 //
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -107,7 +107,7 @@
 
 - (void)newFenceWithGesture:(UITapGestureRecognizer *)gestureRecognizer{
     
-    if (gestureRecognizer.state != UIGestureRecognizerStateEnded){
+    if ([gestureRecognizer state] != UIGestureRecognizerStateEnded){
         return;
     }
     
@@ -135,6 +135,19 @@
     [self addPointToActiveFenceAtPoint:[gestureRecognizer locationOfTouch:0 inView:self.view]];
     [self renderAnnotations];
 }
+
+- (void) deactivateActiveFence:(UIGestureRecognizer *)gestureRecognizer{
+    
+    
+    
+    if ([gestureRecognizer state] != UIGestureRecognizerStateEnded) {
+        return;
+    }
+    
+    [[self fences] deactivateActiveFence];
+    [self renderAnnotations];
+}
+
 
 #pragma mark - New Fence 
 
@@ -181,7 +194,10 @@
     }
     
     [self renderAnnotations];
+    
+    [self showRenameAlert];
 }
+
 
 #pragma mark - Pin Actions
 
@@ -256,11 +272,31 @@
     
     [[self mapView] addGestureRecognizer:threeFingerTouch];
     
+    //
+    //  The gesture for adding poinys
+    //
+    
     UILongPressGestureRecognizer*tapGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(addPointToActiveFenceFromGesture:)];
     [tapGesture setNumberOfTouchesRequired:1];
     [tapGesture setMinimumPressDuration:0.3f];
     [tapGesture setDelegate:self];
     [[self mapView] addGestureRecognizer:tapGesture];
+    
+    //
+    //  Deselect the active fence.
+    //
+    
+    UITapGestureRecognizer *twoFingerGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deactivateActiveFence:)];
+    [twoFingerGestureRecognizer setNumberOfTapsRequired:2];
+    [twoFingerGestureRecognizer setNumberOfTouchesRequired:2];
+    [twoFingerGestureRecognizer setCancelsTouchesInView:YES];
+    
+    for (UIGestureRecognizer *gesture in [[self mapView] gestureRecognizers]) {
+        [gesture requireGestureRecognizerToFail:twoFingerGestureRecognizer];
+    }
+    
+    [[self mapView] addGestureRecognizer:twoFingerGestureRecognizer];
+    
     
 }
 
@@ -349,7 +385,6 @@
             
             [annotationView setBackgroundColor:[UIColor clearColor]];
             
-            
             //
             //
             //
@@ -363,8 +398,6 @@
         
         ((UILabel *)[annotationView viewWithTag:37]).frame = CGRectMake(0, 0, width, 25);
         [annotationView setFrame:CGRectMake(0, 0, width, 25)];
-        
-        
         
         annotationView.canShowCallout = YES;
         
@@ -608,17 +641,10 @@
 }
 
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
-    
     for (UIView *subview in [[self mapView] subviews]) {
-        
         if ([[subview class] conformsToProtocol:@protocol(MKAnnotation) ]) {
-            
             if (CGRectContainsPoint([subview frame], [touch locationInView:[self view]])) {
-             
-                
-                
                 return NO;
-                
             }
         }
     }
@@ -627,7 +653,6 @@
 }
 
 - (void) handleGesture: (UIGestureRecognizer *) gestureRecognizer{
-    
     
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
 
@@ -712,7 +737,7 @@
                                                    delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@"OK", nil];
     [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
     [[alert textFieldAtIndex:0] setAutocapitalizationType:UITextAutocapitalizationTypeWords];
-    [[alert textFieldAtIndex:0] setText:[[[self fences]workingGeofence] name]];
+    [[alert textFieldAtIndex:0] setText:[[[self fences] workingGeofence] name]];
     [[alert textFieldAtIndex:0] setClearButtonMode:UITextFieldViewModeAlways];
     [alert show];
 }
