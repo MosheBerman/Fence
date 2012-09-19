@@ -18,7 +18,8 @@
 
 @property (strong, nonatomic) NSTimer *saveTimer;
 
-@property (strong, nonatomic) UIActionSheet *actionSheet;
+@property (strong, nonatomic) UIActionSheet *importExportActionSheet;
+@property (strong, nonatomic) UIActionSheet *mapTypeActionSheet;
 
 @property (strong, nonatomic) UIBarButtonItem *modeButton;
 @property (strong, nonatomic) UIBarButtonItem *actionButton;

@@ -255,7 +255,7 @@
     //
     
     if (![self actionButton]) {
-        UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(showActionSheet)];
+        UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(showImportExportActionSheet)];
         [self setActionButton:button];
     }
     
@@ -268,17 +268,15 @@
     [[self navigationItem] setRightBarButtonItems:@[[self actionButton], newFenceButton] animated:YES];
     
     //
-    //  Set up a map type segmented control
+    //  Set up a map type button
     //
     
     NSArray *mapTypes = @[NSLocalizedString(@"Standard", @"Standard"), NSLocalizedString(@"Satellite", @"Satellite"), NSLocalizedString(@"Hybrid", @"Hybrid")];
     
-    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:mapTypes];
-    [segmentedControl setSegmentedControlStyle:UISegmentedControlStyleBar];
-    [segmentedControl setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults] integerForKey:@"mapType"]];
-    [segmentedControl addTarget:self action:@selector(changeAndSaveMapType:) forControlEvents:UIControlEventValueChanged];
     
-    UIBarButtonItem *mapTypeButton = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
+    NSInteger mapType = [[NSUserDefaults standardUserDefaults] integerForKey:@"mapType"];
+    
+    UIBarButtonItem *mapTypeButton = [[UIBarButtonItem alloc] initWithTitle:mapTypes[mapType] style:UIBarButtonItemStyleBordered target:self action:@selector(showMapTypeActionSheet)];
     
     [[self navigationItem] setLeftBarButtonItems:@[mapTypeButton] animated:YES];
     
@@ -329,9 +327,9 @@
     
 }
 
-- (void)showActionSheet{
+- (void)showImportExportActionSheet{
     
-    if (![self actionSheet]) {
+    if (![self importExportActionSheet]) {
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
 
         [actionSheet addButtonWithTitle:NSLocalizedString(@"Export to iTunes", @"Export to iTunes")];
@@ -342,10 +340,28 @@
         [actionSheet setDelegate:self];
         [actionSheet setCancelButtonIndex:3];
         
-        [self setActionSheet:actionSheet];
+        [self setImportExportActionSheet:actionSheet];
     }   
     
-    [[self actionSheet] showFromBarButtonItem:[[self navigationItem] rightBarButtonItems][0] animated:YES];
+    [[self importExportActionSheet] showFromBarButtonItem:[[self navigationItem] rightBarButtonItems][0] animated:YES];
+}
+
+- (void) showMapTypeActionSheet{
+    if (![self mapTypeActionSheet]) {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+        
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Standard", @"Standard")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Satellite", @"Satellite")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Hybrid", @"Hybrid")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+        
+        [actionSheet setDelegate:self];
+        [actionSheet setCancelButtonIndex:3];
+        
+        [self setMapTypeActionSheet:actionSheet];
+    }
+    
+    [[self mapTypeActionSheet] showFromBarButtonItem:[[self navigationItem] leftBarButtonItems][0] animated:YES];
 }
 
 #pragma mark - Map View Delegate
@@ -753,11 +769,13 @@
     }
 }
 
-- (void)changeAndSaveMapType:(UISegmentedControl *)sender{
+- (void)changeAndSaveMapType:(NSInteger)mapType{
     
-    [[NSUserDefaults standardUserDefaults] setInteger:sender.selectedSegmentIndex forKey:@"mapType"];
+    [[NSUserDefaults standardUserDefaults] setInteger:mapType forKey:@"mapType"];
     
-    self.mapView.mapType = sender.selectedSegmentIndex;
+    [[self mapView] setMapType:mapType];
+    
+    [self configureButtons];
     
 }
 
