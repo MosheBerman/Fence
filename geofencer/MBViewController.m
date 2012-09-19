@@ -64,6 +64,7 @@
     if (self) {
         
         _fences = [[MBGeofenceCollection alloc] init];
+        _saveManager = [[MBSaveManager alloc] init];
         _annotations = [@[] mutableCopy];
         _isDragging = NO;
     }
@@ -101,6 +102,18 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     return YES;
+}
+
+#pragma mark - UIActionSheet Delegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    NSString *tappedButton = [actionSheet buttonTitleAtIndex:buttonIndex];
+    
+    if ([tappedButton isEqualToString:NSLocalizedString(@"Export to iTunes", @"The title for the export button")]) {
+        
+        [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
+        
+    }
 }
 
 #pragma mark - UIGestureRecognizer Delegate
@@ -156,9 +169,6 @@
 }
 
 - (void) deactivateActiveFence:(UIGestureRecognizer *)gestureRecognizer{
-    
-    
-    
     if ([gestureRecognizer state] != UIGestureRecognizerStateEnded) {
         return;
     }
@@ -292,7 +302,7 @@
     [[self mapView] addGestureRecognizer:threeFingerTouch];
     
     //
-    //  The gesture for adding poinys
+    //  The gesture for adding points.
     //
     
     UILongPressGestureRecognizer*tapGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(addPointToActiveFenceFromGesture:)];
@@ -320,17 +330,22 @@
 }
 
 - (void)showActionSheet{
+    
     if (![self actionSheet]) {
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
 
         [actionSheet addButtonWithTitle:NSLocalizedString(@"Export to iTunes", @"Export to iTunes")];
         [actionSheet addButtonWithTitle:NSLocalizedString(@"Share via Email", @"Share via Email")];
         [actionSheet addButtonWithTitle:NSLocalizedString(@"Import Fence", @"Import Fence")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+        
+        [actionSheet setDelegate:self];
+        [actionSheet setCancelButtonIndex:3];
         
         [self setActionSheet:actionSheet];
     }   
     
-    [[self actionSheet] showFromBarButtonItem:(self.navigationItem.rightBarButtonItems)[0] animated:YES];
+    [[self actionSheet] showFromBarButtonItem:[[self navigationItem] rightBarButtonItems][0] animated:YES];
 }
 
 #pragma mark - Map View Delegate
@@ -649,7 +664,7 @@
     
     MBGeofence *fence = [[self fences] fenceContainingPoint:userLocation.location.coordinate];
     NSString *string = [fence name] ? [fence name] : @"No fence";
-//    NSLog(@"User is in fence called: %@", string);
+    NSLog(@"User is in fence called: %@", string);
 
 }
 
@@ -756,7 +771,7 @@
     //  Save the changes
     //
     
-    //  TODO: This could potentially be a performance killer if there are a lot of points.
+    //  FIXME: This could potentially be a performance killer if there are a lot of points.
     
     [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
 }
