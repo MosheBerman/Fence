@@ -87,14 +87,14 @@
     
 }
 
+//
+//  Save the changes
+//  FIXME: This could potentially be a performance killer if there are a lot of points.
+//
+
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    
-    //
-    //  Save the changes
-    //
-    
-    //  TODO: This could potentially be a performance killer if there are a lot of points.
+
     [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
     
 }
@@ -138,21 +138,27 @@
 
 #pragma mark - New Fence 
 
+//
+//  Use some fancy gemoetry to create a
+//  shiny new fence at the center of the scren
+//
+//
+
 - (void) newFenceInMap{
     
     [[self fences]newFence];
     
-    const float kLengthOfSide = 96.0;
+    const float kLengthOfSide = 128.0;
     
     const float kWorkingAngle = 90;
     
-    const int kNumberOfSidesInNewFence = 4;
+    const int kNumberOfSidesInNewFence = 3;
     
     for(int i=0; i< kNumberOfSidesInNewFence; i++){
         
         float workingAngle = kWorkingAngle * i;
         
-        float adjustedAngle = workingAngle*3/2;
+        float adjustedAngle = workingAngle+(kWorkingAngle);
         
         //  Convert to radians
         CGFloat angleInRadians = adjustedAngle*(M_PI/180);
@@ -288,7 +294,7 @@
         //  Make a view for the annotation title
         //
         
-        MBAnnotationView *annotationView = (MBAnnotationView*)[self.mapView dequeueReusableAnnotationViewWithIdentifier:reuse];
+        MBAnnotationView *annotationView = (MBAnnotationView*)[[self mapView] dequeueReusableAnnotationViewWithIdentifier:reuse];
         
         //
         //  Prepare to set up the label
@@ -296,7 +302,12 @@
         
         const int kVerticalPadding = 20;
         
-        NSString *labelText = [annotation title];
+        
+        NSString *title = [annotation title];
+        
+        //TODO: Show how many points are in fence here...
+        
+        NSString *labelText = title;
         
         UIFont *labelFont = [UIFont boldSystemFontOfSize:15];
         
