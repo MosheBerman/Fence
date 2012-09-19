@@ -12,6 +12,8 @@
 #import "MBGeofenceCollection.h"
 #import "MBSaveManager.h"
 
+#import "MBImportViewController.h"
+
 @interface MBViewController () <UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) MBGeofenceCollection *fences;
@@ -122,6 +124,16 @@
     if ([tappedButton isEqualToString:NSLocalizedString(@"Export to iTunes", @"The title for the export button")]) {
         
         [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
+        
+    }else if([tappedButton isEqualToString:NSLocalizedString(@"Import Fence", @"The title for the import button.")]){
+        
+        MBImportViewController *importViewController = [[MBImportViewController alloc] initWithNibName:@"MBImportViewController" bundle:nil];
+        
+        UINavigationController *importNavController = [[UINavigationController alloc] initWithRootViewController:importViewController];
+        
+        [importNavController setModalPresentationStyle:UIModalPresentationFormSheet];
+        
+        [self presentViewController:importNavController animated:YES completion:nil];
         
     }
 }
