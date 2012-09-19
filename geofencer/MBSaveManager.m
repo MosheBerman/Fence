@@ -164,11 +164,15 @@
         
         [alert show];
         
+        
+        return NO;
     }else{
         
         //
         //  Save went well.
         //
+        
+        return YES;
     }
 }
 
