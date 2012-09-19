@@ -23,10 +23,13 @@
 
     NSURL *url = [self applicationDocumentsDirectory];
     
-    for (MBGeofence *fence in [fences geofences]) {
 
-        [self saveFence:fence toDirectory:url asJSON:YES];
+    for (MBGeofence *fence in [fences geofences]) {
         
+
+        if(![self saveFence:fence toDirectory:url asJSON:YES]){
+            failedToSaveAFence = YES;
+        }  
     }
     
     if (failedToSaveAFence) {
@@ -138,11 +141,15 @@
     
     NSArray *fenceArray = [fence asArray];
     
+    NSDictionary *fenceDictionary = [fence asDictionary];
+    
     if(useJSON){
-        NSOutputStream *output = [[NSOutputStream alloc] initToFileAtPath:[url path] append:NO];
         
         NSError *error = nil;
-        [NSJSONSerialization writeJSONObject:fenceArray toStream:output options:0 error:&error];
+        if([[NSJSONSerialization dataWithJSONObject:fenceDictionary options:0 error:&error] writeToFile:[url path] atomically:NO]){
+            
+        }
+        
         
         return error == nil;
     }
