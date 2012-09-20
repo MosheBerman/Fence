@@ -21,10 +21,6 @@
     return self;
 }
 
-- (MKAnnotationViewDragState)dragState{
-    return self.dragState;
-}
-
 - (void)setDragState:(MKAnnotationViewDragState)newDragState animated:(BOOL)animated{
     if (newDragState == MKAnnotationViewDragStateStarting) {
         self.dragState = MKAnnotationViewDragStateDragging;
