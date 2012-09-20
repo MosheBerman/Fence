@@ -783,6 +783,7 @@
 
 - (void) closeFence{
     [[self fences] closeActiveFence];
+    [self configureButtonsWithAnimation:NO];
     [self renderAnnotations];
 }
 
