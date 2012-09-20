@@ -127,8 +127,7 @@
         
     }else if([tappedButton isEqualToString:NSLocalizedString(@"Import Fence", @"The title for the import button.")]){
         
-        MBImportViewController *importViewController = [[MBImportViewController alloc] initWithNibName:@"MBImportViewController" bundle:nil];
-        
+        MBImportViewController *importViewController = [[MBImportViewController alloc] initWithFences:[self fences]];
         UINavigationController *importNavController = [[UINavigationController alloc] initWithRootViewController:importViewController];
         
         [importNavController setModalPresentationStyle:UIModalPresentationFormSheet];
@@ -196,6 +195,7 @@
     }
     
     [[self fences] deactivateActiveFence];
+    [self setIsDragging:NO];
     [self renderAnnotations];
 }
 
