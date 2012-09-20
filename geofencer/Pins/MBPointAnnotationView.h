@@ -10,7 +10,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface MBPointAnnotationView : MBLabelAnnotationView
+@interface MBPointAnnotationView : MKAnnotationView
 
 @property (nonatomic, assign) NSInteger pointIndex;
 
