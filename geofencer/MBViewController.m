@@ -14,6 +14,11 @@
 
 #import "MBImportViewController.h"
 
+
+#define kImportFencesTitle NSLocalizedString(@"Import", @"The title for the import button.")
+#define kExportFencesTitle NSLocalizedString(@"Export", @"The title for the export button.")
+#define kOpenFenceTitle NSLocalizedString(@"Open", @"The title for the import button.")
+
 @interface MBViewController () <UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) MBGeofenceCollection *fences;
@@ -23,7 +28,6 @@
 @property (strong, nonatomic) NSMutableArray *overlays;
 
 @property(assign, nonatomic) BOOL isDragging;
-
 
 @end
 
@@ -75,7 +79,7 @@
     [self setTitle:title];
     
     [self configureGestures];
-    [self configureButtons];
+    [self configureButtonsWithAnimation:YES];
     
 }
 
@@ -124,6 +128,7 @@
     }
 
     [self renderAnnotations];
+    [self configureButtonsWithAnimation:NO];
 }
 
 - (void)addPointToActiveFenceFromGesture:(UITapGestureRecognizer *)gestureRecognizer{
@@ -151,6 +156,7 @@
 - (void) deactivateActiveFence{
     [[self saveManager] saveFenceToLibrary:[[self fences] workingGeofence]];
     [[self fences] deactivateActiveFence];
+    [self configureButtonsWithAnimation:NO];
     [self setIsDragging:NO];
     [self renderAnnotations];
 }
@@ -161,7 +167,7 @@
 //  Set up the buttons for the navigation bar
 //
 
-- (void)configureButtons{
+- (void)configureButtonsWithAnimation:(BOOL)animated{
     
     //
     //  Create the action button
@@ -174,12 +180,19 @@
     }
     
     //
-    //  Create the New Fence button
+    //  Create the New Fence button if we're not editing a fence,
+    //  otherwise, add a "done" button.
+    //
     //
     
-    UIBarButtonItem *newFenceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFenceInMap)];
     
-    [[self navigationItem] setRightBarButtonItems:@[[self actionButton], newFenceButton] animated:YES];
+    UIBarButtonItem *newOrDoneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFenceInMap)];;
+    
+    if ([[self fences] workingGeofence]) {
+        newOrDoneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(deactivateActiveFence)];
+    }
+    
+    [[self navigationItem] setRightBarButtonItems:@[[self actionButton], newOrDoneButton] animated:animated];
     
     //
     //  Set up a map type button
@@ -192,7 +205,7 @@
     
     UIBarButtonItem *mapTypeButton = [[UIBarButtonItem alloc] initWithTitle:mapTypes[mapType] style:UIBarButtonItemStyleBordered target:self action:@selector(showMapTypeActionSheet)];
     
-    [[self navigationItem] setLeftBarButtonItems:@[mapTypeButton] animated:YES];
+    [[self navigationItem] setLeftBarButtonItems:@[mapTypeButton] animated:animated];
     
 }
 
@@ -227,7 +240,7 @@
     //  Deselect the active fence.
     //
     
-    UITapGestureRecognizer *twoFingerGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deactivateActiveFence:)];
+    UITapGestureRecognizer *twoFingerGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deactivateActiveFenceWithGesture:)];
     [twoFingerGestureRecognizer setNumberOfTapsRequired:2];
     [twoFingerGestureRecognizer setNumberOfTouchesRequired:2];
     [twoFingerGestureRecognizer setCancelsTouchesInView:YES];
@@ -317,7 +330,7 @@
             //
             
             UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-            [[infoButton superview] setClipsToBounds:NO];
+            [infoButton setShowsTouchWhenHighlighted:NO];
             [annotationView setRightCalloutAccessoryView:infoButton];
         }                
         
@@ -522,6 +535,7 @@
                 if ([fence isEqual:[[self fences]workingGeofence]])return;
                 
                 [[self fences] setWorkingGeofence: fence];
+                [self configureButtonsWithAnimation:NO];
                 [self renderAnnotations];
                 
                 return;
@@ -656,6 +670,7 @@
         [self addPointToActiveFenceAtPoint:point];
     }
     
+    [self configureButtonsWithAnimation:NO];
     [self renderAnnotations];
     
     [self showRenameAlert];
@@ -689,9 +704,9 @@
     if (![self importExportActionSheet]) {
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
         
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Export to iTunes", @"Export to iTunes")];
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Share via Email", @"Share via Email")];
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Import Fence", @"Import Fence")];
+        [actionSheet addButtonWithTitle:kOpenFenceTitle];
+        [actionSheet addButtonWithTitle:kExportFencesTitle];
+        [actionSheet addButtonWithTitle:kImportFencesTitle];
         [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
         
         [actionSheet setDelegate:self];
@@ -730,22 +745,36 @@
     if ([actionSheet isEqual:[self mapTypeActionSheet]] ) {
         if (buttonIndex < 3) {
             [self changeAndPersistMapType:buttonIndex];
-            [self configureButtons];
+            [self configureButtonsWithAnimation:NO];
             return;
         }
     }
     
     NSString *tappedButton = [actionSheet buttonTitleAtIndex:buttonIndex];
-    
-    if ([tappedButton isEqualToString:NSLocalizedString(@"Export to iTunes", @"The title for the export button")]) {
+
+    if ([tappedButton isEqualToString:kExportFencesTitle]) {
+        
+        [self showOpenView];
+        
+    }else if ([tappedButton isEqualToString:kExportFencesTitle]) {
         
         [self showExportView];
         
-    }else if([tappedButton isEqualToString:NSLocalizedString(@"Import Fence", @"The title for the import button.")]){
+    }else if([tappedButton isEqualToString:kImportFencesTitle]){
         
         [self showImportView];
         
     }
+    
+    [actionSheet setDelegate:nil];
+    [self setImportExportActionSheet:nil];
+    [self setMapTypeActionSheet:nil];
+}
+
+
+- (void) showOpenView{
+    
+    
 }
 
 - (void) showExportView{
@@ -781,7 +810,7 @@
     
     [[self mapView] setMapType:mapType];
     
-    [self configureButtons];
+    [self configureButtonsWithAnimation:NO];
     
 }
 
