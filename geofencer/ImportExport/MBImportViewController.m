@@ -10,12 +10,13 @@
 
 #import "MBSaveManager.h"
 
-#import "MBGeofenceCollection.h"
+typedef void(^MBImportCompletionBlock)(BOOL successful);
 
 @interface MBImportViewController () <UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) IBOutlet UITableView *fileTableView;
 @property (strong, nonatomic) MBSaveManager *saveManager;
 @property (strong, nonatomic) MBGeofenceCollection *fences;
+@property (strong, nonatomic) NSMutableArray *importQueue;
 @end
 
 @implementation MBImportViewController
@@ -27,6 +28,7 @@
     if (self) {
         _fences = collection;
         _saveManager = [[MBSaveManager alloc] init];
+        _importQueue = [@[] mutableCopy];
     }
     
     return self;
@@ -56,9 +58,9 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    NSUInteger numberOfJSONFiles = [[self saveManager] numberOfJSONFilesAvailableForReading];
+    NSUInteger numberOfJSONFiles = [[self saveManager] numberOfJSONFilesAvailableForImport];
     
-    NSUInteger numberOfXMLFiles = [[self saveManager] numberOfXMLFilesAvailableForReading];
+    NSUInteger numberOfXMLFiles = [[self saveManager] numberOfXMLFilesAvailableForImport];
     
     if (section == 0) {
         return MAX(numberOfJSONFiles, 1);
@@ -80,19 +82,41 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        
     }
     
-    NSUInteger section = [indexPath row];
+    NSUInteger row = [indexPath row];
     
-//    [[cell textLabel] setText:@""];
+    NSUInteger section = [indexPath section];
+    
+    NSArray *results = [[self saveManager] JSONFilesAvailableForImport];
+    
+    if (section == 1) {
+        results =[[self saveManager] XMLFilesAvailableForImport];
+    }
+    
+    
+    NSString *title = NSLocalizedString(@"No Fences", @"A label for when there's no fence.");
+    
+    [[cell textLabel] setTextAlignment:NSTextAlignmentCenter];
+    
+    [[cell textLabel] setTextColor:[UIColor colorWithWhite:0.5 alpha:1.0]];
+    
+    if ([results count]) {
+        title = results[row];
+        [[cell textLabel] setTextAlignment:NSTextAlignmentLeft];
+        [[cell textLabel] setTextColor:[UIColor blackColor]];
+    }
+    
+    [[cell textLabel] setText:title];
     
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     if (section == 0) {
-        return NSLocalizedString(@"JSON Files", @"A title for the section of the table which shows JSON files");
+        return NSLocalizedString(@"GeoJSON Files", @"A title for the section of the table which shows JSON files");
     }
     
     return NSLocalizedString(@"Property Lists", @"A title for the section of the table which shows JSON files");
@@ -102,8 +126,7 @@
 
 - (void) configureButtons{
     
-    
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(importAndDismiss)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", @"A button for the import view to begin the import process.") style:UIBarButtonItemStyleDone target:self action:@selector(importAndDismiss)];
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(importAndDismiss)];
     
@@ -113,13 +136,34 @@
 }
 
 - (void) importAndDismiss{
-    
-    
-    
-    [self dismiss];
+    [self importFences:[self importQueue] completion:^(BOOL successful) {
+        if (successful) {
+           [self dismiss];
+        }else{
+            //  TODO: Failed to import, show some sort of error.
+        }
+    }];
 }
 
 - (void) dismiss{
     [[[self navigationController] presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - Import Method
+
+- (void) importFences:(NSArray *)fencesToImport completion:(MBImportCompletionBlock)completion{
+ 
+    BOOL successful = YES;
+    
+    for (NSString *fence in [self importQueue]) {
+        
+        //  Copy fences over to caches directory
+        //  fail if a fence fails.
+    }
+    
+    if (completion) {
+        completion(successful);
+    }
+}
+
 @end

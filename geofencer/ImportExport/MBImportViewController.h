@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MBGeofenceCollection.h"
+
 @interface MBImportViewController : UIViewController
+
+- (id) initWithFences:(MBGeofenceCollection *)collection;
 
 @end
