@@ -80,7 +80,6 @@
 
 - (void) addPointToWorkingFence:(CLLocationCoordinate2D)point{
     [[self workingGeofence] addLocation:point];
-    [[self workingGeofence] reorganizeByDistance];
 }
 
 - (void) removePointFromWorkingFence:(CLLocationCoordinate2D)point{
@@ -90,7 +89,6 @@
     }
     
     [[self workingGeofence] removeLocation:point];
-    [[self workingGeofence] reorganizeByDistance];
 }
 
 #pragma mark - Fence Count
