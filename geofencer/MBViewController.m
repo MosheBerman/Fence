@@ -27,7 +27,8 @@
 @property (strong, nonatomic) NSMutableArray *annotations;
 @property (strong, nonatomic) NSMutableArray *overlays;
 
-@property(assign, nonatomic) BOOL isDragging;
+@property (assign, nonatomic) BOOL isDragging;
+@property (assign, nonatomic) BOOL isNamingNewFence;
 
 @end
 
@@ -172,7 +173,6 @@
     //
     //  Create the action button
     //
-    //
     
     if (![self actionButton]) {
         UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(showImportExportActionSheet)];
@@ -186,7 +186,7 @@
     //
     
     
-    UIBarButtonItem *newOrDoneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFenceInMap)];;
+    UIBarButtonItem *newOrDoneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newFenceInMap)];
     
     if ([[self fences] workingGeofence]) {
         newOrDoneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(deactivateActiveFence)];
@@ -670,6 +670,7 @@
     [self configureButtonsWithAnimation:NO];
     [self renderAnnotations];
     
+    [self setIsNamingNewFence:YES];
     [self showRenameAlert];
 }
 
@@ -682,18 +683,6 @@
     //
     
     [[self fences] addPointToWorkingFence:touchMapCoordinate];
-}
-
-- (void) showRenameAlert{
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Name Fence", @"Name Fence")
-                                                    message:NSLocalizedString(@"Enter a name for this Fence.", @"Enter a name for this Fence.")
-                                                   delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@"OK", nil];
-    [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    [[alert textFieldAtIndex:0] setAutocapitalizationType:UITextAutocapitalizationTypeWords];
-    [[alert textFieldAtIndex:0] setText:[[[self fences] workingGeofence] name]];
-    [[alert textFieldAtIndex:0] setClearButtonMode:UITextFieldViewModeAlways];
-    [alert show];
 }
 
 - (void)showImportExportActionSheet{
@@ -749,7 +738,7 @@
     
     NSString *tappedButton = [actionSheet buttonTitleAtIndex:buttonIndex];
 
-    if ([tappedButton isEqualToString:kExportFencesTitle]) {
+    if ([tappedButton isEqualToString:kOpenFenceTitle]) {
         
         [self showOpenView];
         
@@ -794,16 +783,19 @@
 #pragma mark - Import/Export/Open views
 
 - (void) showOpenView{
-    
+    [self showFileManagerWithMode:kFileOpen];
 }
 
 - (void) showExportView{
-
+    [self showFileManagerWithMode:kFileExport];
 }
 
 - (void) showImportView{
-    
-    MBFileManagerViewController *importViewController = [[MBFileManagerViewController alloc] initWithFences:[self fences]];
+    [self showFileManagerWithMode:kFileImport];
+}
+
+- (void) showFileManagerWithMode:(FileMode)mode{
+    MBFileManagerViewController *importViewController = [[MBFileManagerViewController alloc] initWithFences:[self fences] andMode:mode];
     UINavigationController *importNavController = [[UINavigationController alloc] initWithRootViewController:importViewController];
     
     [importNavController setModalPresentationStyle:UIModalPresentationFormSheet];
@@ -814,6 +806,19 @@
 
 
 #pragma mark - Alert View Delegate
+
+- (void) showRenameAlert{
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Name Fence", @"Name Fence")
+                                                    message:NSLocalizedString(@"Enter a name for this Fence.", @"Enter a name for this Fence.")
+                                                   delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:@"OK", nil];
+    [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    [[alert textFieldAtIndex:0] setAutocapitalizationType:UITextAutocapitalizationTypeWords];
+    [[alert textFieldAtIndex:0] setText:[[[self fences] workingGeofence] name]];
+    [[alert textFieldAtIndex:0] setClearButtonMode:UITextFieldViewModeAlways];
+    [alert show];
+}
+
 
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     
@@ -829,7 +834,10 @@
         }else if ([alertView textFieldAtIndex:0]){
             [[[self fences] workingGeofence] setName:[alertView textFieldAtIndex:0].text];
             [self renderAnnotations];
+            [self setIsNamingNewFence:NO];
         }
+    }else if([self isNamingNewFence]){
+        [self deleteFence];
     }
 }
 
