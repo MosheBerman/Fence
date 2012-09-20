@@ -51,14 +51,6 @@
 
 #pragma mark - View Life Cycle
 
-/*
- 
- TODO: Gestures
- 
- Tap to add point - While editing a fence. Long press ends editing and saves.
- 
- */
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -82,59 +74,19 @@
     NSString *title = NSLocalizedString(@"Fence", @"Fence");
     [self setTitle:title];
     
-    NSTimer *aTimer  = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(autosave) userInfo:nil repeats:YES];
-    [self setSaveTimer:aTimer];
-    
     [self configureGestures];
     [self configureButtons];
     
 }
 
-//
-//  Save the changes
-//  FIXME: Saving on quit could potentially be a performance killer if there are a lot of points.
-//
 
 - (void)viewWillDisappear:(BOOL)animated{
+    [self deactivateActiveFence];
     [super viewWillDisappear:animated];
-
-    [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
-    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
     return YES;
-}
-
-#pragma mark - UIActionSheet Delegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
-    
-    
-    if ([actionSheet isEqual:[self mapTypeActionSheet]] ) {
-        if (buttonIndex < 3) {
-            [self changeAndSaveMapType:buttonIndex];
-            [self configureButtons];
-            return;
-        }
-    }
-    
-    NSString *tappedButton = [actionSheet buttonTitleAtIndex:buttonIndex];
-    
-    if ([tappedButton isEqualToString:NSLocalizedString(@"Export to iTunes", @"The title for the export button")]) {
-        
-        [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
-        
-    }else if([tappedButton isEqualToString:NSLocalizedString(@"Import Fence", @"The title for the import button.")]){
-        
-        MBImportViewController *importViewController = [[MBImportViewController alloc] initWithFences:[self fences]];
-        UINavigationController *importNavController = [[UINavigationController alloc] initWithRootViewController:importViewController];
-        
-        [importNavController setModalPresentationStyle:UIModalPresentationFormSheet];
-        
-        [self presentViewController:importNavController animated:YES completion:nil];
-        
-    }
 }
 
 #pragma mark - UIGestureRecognizer Delegate
@@ -189,78 +141,19 @@
     [self renderAnnotations];
 }
 
-- (void) deactivateActiveFence:(UIGestureRecognizer *)gestureRecognizer{
+- (void) deactivateActiveFenceWithGesture:(UIGestureRecognizer *)gestureRecognizer{
     if ([gestureRecognizer state] != UIGestureRecognizerStateEnded) {
         return;
     }
     
+    [self deactivateActiveFence];
+}
+
+- (void) deactivateActiveFence{
+    [[self saveManager] saveFenceToLibrary:[[self fences] workingGeofence]];
     [[self fences] deactivateActiveFence];
     [self setIsDragging:NO];
     [self renderAnnotations];
-}
-
-
-#pragma mark - New Fence 
-
-//
-//  Use some fancy gemoetry to create a
-//  shiny new fence at the center of the scren
-//
-//
-
-- (void) newFenceInMap{
-    
-    [[self fences]newFence];
-    
-    const float kLengthOfSide = 128.0;
-    
-    const float kWorkingAngle = 90;
-    
-    const int kNumberOfSidesInNewFence = 3;
-    
-    for(int i=0; i< kNumberOfSidesInNewFence; i++){
-        
-        float workingAngle = kWorkingAngle * i;
-        
-        float adjustedAngle = workingAngle+(kWorkingAngle);
-        
-        //  Convert to radians
-        CGFloat angleInRadians = adjustedAngle*(M_PI/180);
-        
-        CGPoint point = CGPointZero;
-        
-        //  Calculate the x and Y coordinates
-        point.x = sin(angleInRadians);
-        point.y = cos(angleInRadians);
-        
-        //  Apply the scale factor
-        point.x *= kLengthOfSide;
-        point.y *= kLengthOfSide;
-        
-        //  Offset to the center
-        point.x += [[self mapView] frame].size.width/2;
-        point.y += [[self mapView] frame].size.height/2;
-        
-        [self addPointToActiveFenceAtPoint:point];
-    }
-    
-    [self renderAnnotations];
-    
-    [self showRenameAlert];
-}
-
-
-#pragma mark - Pin Actions
-
-- (void)addPointToActiveFenceAtPoint:(CGPoint)point{
-    
-    CLLocationCoordinate2D touchMapCoordinate = [_mapView convertPoint:point toCoordinateFromView:self.mapView];
-    
-    //
-    //  Add a location to the working geofence
-    //
-    
-    [[self fences] addPointToWorkingFence:touchMapCoordinate];
 }
 
 #pragma mark - UI Setup
@@ -347,43 +240,6 @@
     [[self mapView] addGestureRecognizer:twoFingerGestureRecognizer];
     
     
-}
-
-- (void)showImportExportActionSheet{
-    
-    if (![self importExportActionSheet]) {
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
-
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Export to iTunes", @"Export to iTunes")];
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Share via Email", @"Share via Email")];
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Import Fence", @"Import Fence")];
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-        
-        [actionSheet setDelegate:self];
-        [actionSheet setCancelButtonIndex:3];
-        
-        [self setImportExportActionSheet:actionSheet];
-    }   
-    
-    [[self importExportActionSheet] showFromBarButtonItem:[[self navigationItem] rightBarButtonItems][0] animated:YES];
-}
-
-- (void) showMapTypeActionSheet{
-    if (![self mapTypeActionSheet]) {
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
-        
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Standard", @"Standard")];
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Satellite", @"Satellite")];
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Hybrid", @"Hybrid")];
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-        
-        [actionSheet setDelegate:self];
-        [actionSheet setCancelButtonIndex:3];
-        
-        [self setMapTypeActionSheet:actionSheet];
-    }
-    
-    [[self mapTypeActionSheet] showFromBarButtonItem:[[self navigationItem] leftBarButtonItems][0] animated:YES];
 }
 
 #pragma mark - Map View Delegate
@@ -634,7 +490,7 @@
         }
         
     }else if(newState == MKAnnotationViewDragStateNone && oldState == MKAnnotationViewDragStateEnding){
-        [self renderAndSave];
+        [self renderAnnotations];
         [self setIsDragging:NO];
     }
 }
@@ -709,11 +565,6 @@
 
 #pragma mark - Render and Save
 
-- (void) renderAndSave{
-    [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
-    [self renderAnnotations];
-}
-
 - (void)renderAnnotations{
     
     if (self.annotations== nil) {
@@ -763,6 +614,65 @@
 
 #pragma mark - Actions
 
+
+//
+//  Use some fancy gemoetry to create a
+//  shiny new fence at the center of the scren
+//
+//
+
+- (void) newFenceInMap{
+    
+    [[self fences]newFence];
+    
+    const float kLengthOfSide = 128.0;
+    
+    const float kWorkingAngle = 90;
+    
+    const int kNumberOfSidesInNewFence = 3;
+    
+    for(int i=0; i< kNumberOfSidesInNewFence; i++){
+        
+        float workingAngle = kWorkingAngle * i;
+        
+        float adjustedAngle = workingAngle+(kWorkingAngle);
+        
+        //  Convert to radians
+        CGFloat angleInRadians = adjustedAngle*(M_PI/180);
+        
+        CGPoint point = CGPointZero;
+        
+        //  Calculate the x and Y coordinates
+        point.x = sin(angleInRadians);
+        point.y = cos(angleInRadians);
+        
+        //  Apply the scale factor
+        point.x *= kLengthOfSide;
+        point.y *= kLengthOfSide;
+        
+        //  Offset to the center
+        point.x += [[self mapView] frame].size.width/2;
+        point.y += [[self mapView] frame].size.height/2;
+        
+        [self addPointToActiveFenceAtPoint:point];
+    }
+    
+    [self renderAnnotations];
+    
+    [self showRenameAlert];
+}
+
+- (void)addPointToActiveFenceAtPoint:(CGPoint)point{
+    
+    CLLocationCoordinate2D touchMapCoordinate = [_mapView convertPoint:point toCoordinateFromView:self.mapView];
+    
+    //
+    //  Add a location to the working geofence
+    //
+    
+    [[self fences] addPointToWorkingFence:touchMapCoordinate];
+}
+
 - (void) showRenameAlert{
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Name Fence", @"Name Fence")
@@ -775,8 +685,82 @@
     [alert show];
 }
 
+- (void)showImportExportActionSheet{
+    
+    if (![self importExportActionSheet]) {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+        
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Export to iTunes", @"Export to iTunes")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Share via Email", @"Share via Email")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Import Fence", @"Import Fence")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+        
+        [actionSheet setDelegate:self];
+        [actionSheet setCancelButtonIndex:3];
+        
+        [self setImportExportActionSheet:actionSheet];
+    }
+    
+    [[self importExportActionSheet] showFromBarButtonItem:[[self navigationItem] rightBarButtonItems][0] animated:YES];
+}
+
+- (void) showMapTypeActionSheet{
+    if (![self mapTypeActionSheet]) {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+        
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Standard", @"Standard")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Satellite", @"Satellite")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Hybrid", @"Hybrid")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+        
+        [actionSheet setDelegate:self];
+        [actionSheet setCancelButtonIndex:3];
+        
+        [self setMapTypeActionSheet:actionSheet];
+    }
+    
+    [[self mapTypeActionSheet] showFromBarButtonItem:[[self navigationItem] leftBarButtonItems][0] animated:YES];
+}
+
+
+#pragma mark - UIActionSheet Delegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    
+    
+    if ([actionSheet isEqual:[self mapTypeActionSheet]] ) {
+        if (buttonIndex < 3) {
+            [self changeAndSaveMapType:buttonIndex];
+            [self configureButtons];
+            return;
+        }
+    }
+    
+    NSString *tappedButton = [actionSheet buttonTitleAtIndex:buttonIndex];
+    
+    if ([tappedButton isEqualToString:NSLocalizedString(@"Export to iTunes", @"The title for the export button")]) {
+        
+        [self showExportView];
+        
+    }else if([tappedButton isEqualToString:NSLocalizedString(@"Import Fence", @"The title for the import button.")]){
+        
+        [self showImportView];
+        
+    }
+}
+
 - (void) showExportView{
-    [[self saveManager] saveToDocumentsDirectory:[self fences]];
+
+}
+
+- (void) showImportView{
+    
+    MBImportViewController *importViewController = [[MBImportViewController alloc] initWithFences:[self fences]];
+    UINavigationController *importNavController = [[UINavigationController alloc] initWithRootViewController:importViewController];
+    
+    [importNavController setModalPresentationStyle:UIModalPresentationFormSheet];
+    
+    [self presentViewController:importNavController animated:YES completion:nil];
 }
 
 #pragma mark - Alert View Delegate
@@ -802,19 +786,5 @@
     
 }
 
-
-
-#pragma mark - Save Functionality
-
-- (void) autosave{
-    
-    //
-    //  Save the changes
-    //
-    
-    //  FIXME: This could potentially be a performance killer if there are a lot of points.
-    
-    [[self saveManager] saveIndividualFencesToCachesDirectory:[self fences]];
-}
 
 @end
