@@ -12,7 +12,7 @@
 #import "MBGeofenceCollection.h"
 #import "MBSaveManager.h"
 
-#import "MBImportViewController.h"
+#import "MBFileManagerViewController.h"
 
 
 #define kImportFencesTitle NSLocalizedString(@"Import", @"The title for the import button.")
@@ -775,7 +775,6 @@
                                                        delegate:self
                                               cancelButtonTitle:NSLocalizedString(@"Cancel", @"A title for a cancel button")
                                               otherButtonTitles:NSLocalizedString(@"Close", @"A title for the button that closes a fence"), NSLocalizedString(@"Delete", @"A title for the button that closes a fence and deletes the backing file."), nil];
-    
     [alertView show];
     
 }
@@ -804,7 +803,7 @@
 
 - (void) showImportView{
     
-    MBImportViewController *importViewController = [[MBImportViewController alloc] initWithFences:[self fences]];
+    MBFileManagerViewController *importViewController = [[MBFileManagerViewController alloc] initWithFences:[self fences]];
     UINavigationController *importNavController = [[UINavigationController alloc] initWithRootViewController:importViewController];
     
     [importNavController setModalPresentationStyle:UIModalPresentationFormSheet];
