@@ -10,57 +10,6 @@
 
 @implementation MBSaveManager
 
-
-- (void) saveAsSingleFileToCachesDirectory:(MBGeofenceCollection*)fences{
-    NSURL *url = [self applicationCachesDirectory];
-    [self saveFences:fences toDirectory:url];
-}
-
-- (void) saveIndividualFencesToCachesDirectory:(MBGeofenceCollection *)fences{
-    
-    BOOL failedToSaveAFence = NO;
-
-    NSURL *url = [self applicationDocumentsDirectory];
-
-    for (MBGeofence *fence in [fences geofences]) {
-    
-        if(![self saveFence:fence toDirectory:url asJSON:YES]){
-            failedToSaveAFence = YES;
-        }  
-    }
-    
-    if (failedToSaveAFence) {
-        NSLog(@"There was an error saving one or more fences.");
-    }
-    
-}
-
-- (void)saveToDocumentsDirectory:(MBGeofenceCollection *)fences{
-    NSURL *url = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Fences.plist"];
-    
-    if(![[self serializeFences:fences] writeToURL:url atomically:NO]){
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops",@"Whoops")
-                                                        message:NSLocalizedString(@"Your fences have not been exported.",@"Your fences have not been exported.")
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                              otherButtonTitles: nil];
-        
-        [alert show];
-        
-    }else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Success",@"Success")
-                                                        message:NSLocalizedString(@"Your fences have been exported to the documents directory. You can retrieve them in iTunes.",@"Your fences have been exported to the documents directory. You can retrieve them in iTunes.")
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                              otherButtonTitles: nil];
-        
-        [alert show];
-    }
-}
-
-
-
 #pragma mark - Serialized and Deserialize
 
 //
@@ -184,6 +133,23 @@
         //
         
         return YES;
+    }
+}
+
+#pragma mark - Delete Fence Method
+
+- (BOOL) deleteFenceNamed:(NSString *)name{
+
+    NSString *nameWithPLISTExtension = [NSString stringWithFormat:@"%@.plist",name];
+    
+    NSURL *url = [[self applicationLibraryDirectory] URLByAppendingPathComponent:nameWithPLISTExtension];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]]) {
+        
+        NSError *error = nil;
+        return [[NSFileManager defaultManager] removeItemAtPath:[url path] error:&error];
+    }else{
+        return NO;
     }
 }
 

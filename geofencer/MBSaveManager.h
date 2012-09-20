@@ -12,16 +12,11 @@
 
 @interface MBSaveManager : NSObject
 
-- (void) saveAsSingleFileToCachesDirectory:(MBGeofenceCollection*)fences;
-- (void) saveIndividualFencesToCachesDirectory:(MBGeofenceCollection *)fences;
-
-
 - (BOOL) saveFences:(MBGeofenceCollection *)fences toDirectory:(NSURL *)directory;
 - (BOOL) saveFence:(MBGeofence *)fence toDirectory:(NSURL *)directory asJSON:(BOOL)useJSON;
 - (BOOL) saveFenceToLibrary:(MBGeofence *)fence;
 
-- (void)saveToDocumentsDirectory:(MBGeofenceCollection *)fences;
-
+- (BOOL) deleteFenceNamed:(NSString *)name;
 
 #pragma mark - File Import Methods
 
