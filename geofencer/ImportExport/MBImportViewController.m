@@ -10,18 +10,19 @@
 
 #import "MBSaveManager.h"
 
-typedef void(^MBImportCompletionBlock)(BOOL successful);
+typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
 
 @interface MBImportViewController () <UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) IBOutlet UITableView *fileTableView;
 @property (strong, nonatomic) MBSaveManager *saveManager;
 @property (strong, nonatomic) MBGeofenceCollection *fences;
 @property (strong, nonatomic) NSMutableArray *importQueue;
+@property (assign, nonatomic) FileMode mode;
 @end
 
 @implementation MBImportViewController
 
-- (id) initWithFences:(MBGeofenceCollection *)collection{
+- (id) initWithFences:(MBGeofenceCollection *)collection andMode:(FileMode)mode{
     
     self = [super initWithNibName:@"MBImportViewController" bundle:nil];
     
@@ -29,6 +30,7 @@ typedef void(^MBImportCompletionBlock)(BOOL successful);
         _fences = collection;
         _saveManager = [[MBSaveManager alloc] init];
         _importQueue = [@[] mutableCopy];
+        _mode = mode;
     }
     
     return self;
@@ -40,7 +42,15 @@ typedef void(^MBImportCompletionBlock)(BOOL successful);
     
     [self configureButtons];
     
-    [self setTitle:NSLocalizedString(@"Import Fences", @"Title for the import view.")];
+    NSString *title = NSLocalizedString(@"Import Fences", @"Title for the import view.");
+    
+    if ([self mode] == kFileOpen) {
+        title = NSLocalizedString(@"Open Fence", @"Title for the Open Fence view");
+    }else if([self mode] == kFileExport){
+        title = NSLocalizedString(@"Export Fences", @"Title for the export view.");
+    }
+
+    [self setTitle:title];
 }
 
 - (void)didReceiveMemoryWarning
@@ -93,7 +103,7 @@ typedef void(^MBImportCompletionBlock)(BOOL successful);
     NSArray *results = [[self saveManager] JSONFilesAvailableForImport];
     
     if (section == 1) {
-        results =[[self saveManager] XMLFilesAvailableForImport];
+        results = [[self saveManager] XMLFilesAvailableForImport];
     }
     
     
@@ -151,7 +161,7 @@ typedef void(^MBImportCompletionBlock)(BOOL successful);
 
 #pragma mark - Import Method
 
-- (void) importFences:(NSArray *)fencesToImport completion:(MBImportCompletionBlock)completion{
+- (void) importFences:(NSArray *)fencesToImport completion:(MBFileOperationCompletionBlock)completion{
  
     BOOL successful = YES;
     
