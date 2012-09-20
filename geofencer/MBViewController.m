@@ -783,18 +783,18 @@
 
 - (void) closeFence{
     [[self fences] closeActiveFence];
+    [self renderAnnotations];
 }
 
 - (void) deleteFence{
     NSString *name = [[[self fences] workingGeofence] name];
-    [[self fences] closeActiveFence];
+    [self closeFence];
     [[self saveManager] deleteFenceNamed:name];
 }
 
 #pragma mark - Import/Export/Open views
 
 - (void) showOpenView{
-    
     
 }
 
@@ -824,13 +824,7 @@
         [self closeFence];
     }else if([title isEqualToString:NSLocalizedString(@"Delete", @"A title for the button that closes a fence and deletes the backing file.")]){
         [self deleteFence];
-    }
-    
-    //
-    //  Rename the active fence as appropriate.
-    //
-    
-    if (buttonIndex != [alertView cancelButtonIndex]) {
+    }else if (buttonIndex != [alertView cancelButtonIndex]) {
         if ([alertView textFieldAtIndex:0] && [alertView textFieldAtIndex:0].text.length == 0) {
             [self showRenameAlert];
         }else if ([alertView textFieldAtIndex:0]){
