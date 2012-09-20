@@ -21,11 +21,11 @@
 - (void)saveToDocumentsDirectory:(MBGeofenceCollection *)fences;
 
 
-#pragma mark - File Reading
+#pragma mark - File Import Methods
 
-- (NSUInteger) numberOfJSONFilesAvailableForReading;
-- (NSUInteger) numberOfXMLFilesAvailableForReading;
+- (NSUInteger) numberOfJSONFilesAvailableForImport;
+- (NSUInteger) numberOfXMLFilesAvailableForImport;
 
-- (NSArray *) XMLFilesAvailableForReading;
-- (NSArray *) JSONFilesAvailableForReading;
+- (NSArray *) XMLFilesAvailableForImport;
+- (NSArray *) JSONFilesAvailableForImport;
 @end

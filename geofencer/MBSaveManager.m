@@ -22,11 +22,9 @@
     BOOL failedToSaveAFence = NO;
 
     NSURL *url = [self applicationDocumentsDirectory];
-    
 
     for (MBGeofence *fence in [fences geofences]) {
-        
-
+    
         if(![self saveFence:fence toDirectory:url asJSON:YES]){
             failedToSaveAFence = YES;
         }  
@@ -159,13 +157,13 @@
     
     if(![fenceArray writeToURL:url atomically:NO]){
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops",@"Whoops")
-                                                        message:NSLocalizedString(@"Your fences have not been saved.",@"Your fences have not been saved.")
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                              otherButtonTitles: nil];
-        
-        [alert show];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops",@"Whoops")
+//                                                        message:NSLocalizedString(@"Your fences have not been saved.",@"Your fences have not been saved.")
+//                                                       delegate:nil
+//                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+//                                              otherButtonTitles: nil];
+//        
+//        [alert show];
         
         
         return NO;
@@ -207,31 +205,22 @@
 
 #pragma mark - Significant Directories
 
-//
-// Returns the URL to the application's Documents directory.
-//
-
-- (NSURL *)applicationDocumentsDirectory
-{
+- (NSURL *)applicationDocumentsDirectory{
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-//
-// Returns the URL to the application's Documents directory.
-//
-- (NSURL *)applicationCachesDirectory
-{
+- (NSURL *)applicationCachesDirectory{
     return [[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-#pragma mark - File Reading
+#pragma mark - File Import Methods
 
-- (NSUInteger) numberOfJSONFilesAvailableForReading{
-    return [[self JSONFilesAvailableForReading] count];
+- (NSUInteger) numberOfJSONFilesAvailableForImport{
+    return [[self JSONFilesAvailableForImport] count];
 }
 
-- (NSUInteger) numberOfXMLFilesAvailableForReading{
-    return [[self XMLFilesAvailableForReading] count];
+- (NSUInteger) numberOfXMLFilesAvailableForImport{
+    return [[self XMLFilesAvailableForImport] count];
 }
 
 
@@ -249,7 +238,7 @@
     return results;
 }
 
-- (NSArray *) XMLFilesAvailableForReading{
+- (NSArray *) XMLFilesAvailableForImport{
     
     
     NSString *applicationDocuments = [[self applicationDocumentsDirectory] path];
@@ -265,7 +254,7 @@
     return [unfilteredResults filteredArrayUsingPredicate:containsXML];
 }
 
-- (NSArray *) JSONFilesAvailableForReading{
+- (NSArray *) JSONFilesAvailableForImport{
     
     NSString *applicationDocuments = [[self applicationDocumentsDirectory] path];
     
