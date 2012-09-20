@@ -550,9 +550,7 @@
         
         if ([[view leftCalloutAccessoryView] isEqual:control]) {
             
-            [[self fences] deleteActiveFence];
-            
-            [self renderAnnotations];
+            [self promptForDelete];
             
         }else if([[view rightCalloutAccessoryView] isEqual:control]){
             
@@ -771,6 +769,29 @@
     [self setMapTypeActionSheet:nil];
 }
 
+- (void) promptForDelete{
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete or Close?", @"A title for the prompt offering to delete or close a fence.")
+                                                        message:NSLocalizedString(@"Would you like to close the fence or also delete it? Closed fences are saved so they can be opened again.", @"A message asking the user if they want to delete or also close the geofence")
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Cancel", @"A title for a cancel button")
+                                              otherButtonTitles:NSLocalizedString(@"Close", @"A title for the button that closes a fence"), NSLocalizedString(@"Delete", @"A title for the button that closes a fence and deletes the backing file."), nil];
+    
+    [alertView show];
+    
+}
+
+- (void) closeFence{
+    [[self fences] closeActiveFence];
+}
+
+- (void) deleteFence{
+    NSString *name = [[[self fences] workingGeofence] name];
+    [[self fences] closeActiveFence];
+    [[self saveManager] deleteFenceNamed:name];
+}
+
+#pragma mark - Import/Export/Open views
 
 - (void) showOpenView{
     
@@ -791,13 +812,28 @@
     [self presentViewController:importNavController animated:YES completion:nil];
 }
 
+
+
 #pragma mark - Alert View Delegate
 
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:NSLocalizedString(@"Close", @"A title for the button that closes a fence")]) {
+        [self closeFence];
+    }else if([title isEqualToString:NSLocalizedString(@"Delete", @"A title for the button that closes a fence and deletes the backing file.")]){
+        [self deleteFence];
+    }
+    
+    //
+    //  Rename the active fence as appropriate.
+    //
+    
     if (buttonIndex != [alertView cancelButtonIndex]) {
-        if ([alertView textFieldAtIndex:0].text.length == 0) {
+        if ([alertView textFieldAtIndex:0] && [alertView textFieldAtIndex:0].text.length == 0) {
             [self showRenameAlert];
-        }else{
+        }else if ([alertView textFieldAtIndex:0]){
             [[[self fences] workingGeofence] setName:[alertView textFieldAtIndex:0].text];
             [self renderAnnotations];
         }
