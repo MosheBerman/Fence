@@ -16,7 +16,6 @@
     [self saveFences:fences toDirectory:url];
 }
 
-
 - (void) saveIndividualFencesToCachesDirectory:(MBGeofenceCollection *)fences{
     
     BOOL failedToSaveAFence = NO;
@@ -130,6 +129,10 @@
 
 #pragma mark - Save Methods
 
+- (BOOL) saveFenceToLibrary:(MBGeofence *)fence {
+    return [self saveFence:fence toDirectory:[self applicationLibraryDirectory] asJSON:NO];
+}
+
 - (BOOL) saveFence:(MBGeofence *)fence toDirectory:(NSURL *)directory asJSON:(BOOL)useJSON{
     
     NSString *suffix = useJSON ? @"geojson" : @"plist";
@@ -155,26 +158,7 @@
         return error == nil;
     }
     
-    if(![fenceArray writeToURL:url atomically:NO]){
-        
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Whoops",@"Whoops")
-//                                                        message:NSLocalizedString(@"Your fences have not been saved.",@"Your fences have not been saved.")
-//                                                       delegate:nil
-//                                              cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-//                                              otherButtonTitles: nil];
-//        
-//        [alert show];
-        
-        
-        return NO;
-    }else{
-        
-        //
-        //  Save went well.
-        //
-        
-        return YES;
-    }
+    return [fenceArray writeToURL:url atomically:NO];
 }
 
 - (BOOL) saveFences:(MBGeofenceCollection *)fences toDirectory:(NSURL *)directory{
@@ -211,6 +195,10 @@
 
 - (NSURL *)applicationCachesDirectory{
     return [[[NSFileManager defaultManager] URLsForDirectory:NSCachesDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+- (NSURL *)applicationLibraryDirectory{
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
 #pragma mark - File Import Methods
