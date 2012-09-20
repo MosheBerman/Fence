@@ -79,7 +79,6 @@
     
 }
 
-
 - (void)viewWillDisappear:(BOOL)animated{
     [self deactivateActiveFence];
     [super viewWillDisappear:animated];
@@ -730,7 +729,7 @@
     
     if ([actionSheet isEqual:[self mapTypeActionSheet]] ) {
         if (buttonIndex < 3) {
-            [self changeAndSaveMapType:buttonIndex];
+            [self changeAndPersistMapType:buttonIndex];
             [self configureButtons];
             return;
         }
@@ -776,7 +775,7 @@
     }
 }
 
-- (void)changeAndSaveMapType:(NSInteger)mapType{
+- (void)changeAndPersistMapType:(NSInteger)mapType{
     
     [[NSUserDefaults standardUserDefaults] setInteger:mapType forKey:@"mapType"];
     
