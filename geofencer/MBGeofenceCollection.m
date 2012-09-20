@@ -54,12 +54,11 @@
     }
 }
 
-- (void) deleteActiveFence{
+- (void) closeActiveFence{
     [[self geofences] removeObject:self.workingGeofence];
     [[self workingGeofence] removeAllObjects];
     [self setWorkingGeofence:nil];
 }
-
 
 #pragma mark - Active Fence
 

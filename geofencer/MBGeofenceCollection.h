@@ -19,7 +19,7 @@
 
 - (MBGeofence *) newFence;
 //- (void) addFence:(MBGeofence *)fence andMakeActive:(BOOL)newFenceShouldBecomeActive;
-- (void) deleteActiveFence;
+- (void) closeActiveFence;
 
 - (void) deactivateActiveFence;
 
