@@ -200,10 +200,25 @@
     
     NSArray *mapTypes = @[NSLocalizedString(@"Standard", @"Standard"), NSLocalizedString(@"Satellite", @"Satellite"), NSLocalizedString(@"Hybrid", @"Hybrid")];
     
-    
     NSInteger mapType = [[NSUserDefaults standardUserDefaults] integerForKey:@"mapType"];
     
+
+    
+    //
+    //  On iPhone, show a button, on iPad, show a segmented control.
+    //
+    
     UIBarButtonItem *mapTypeButton = [[UIBarButtonItem alloc] initWithTitle:mapTypes[mapType] style:UIBarButtonItemStyleBordered target:self action:@selector(showMapTypeActionSheet)];
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        
+        UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:mapTypes];
+        [segmentedControl setSegmentedControlStyle:UISegmentedControlStyleBar];
+        [segmentedControl setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults] integerForKey:@"mapType"]];
+        [segmentedControl addTarget:self action:@selector(changeAndSaveMapTypeWithSegmentedControl:) forControlEvents:UIControlEventValueChanged];
+        mapTypeButton = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
+        
+    }
     
     [[self navigationItem] setLeftBarButtonItems:@[mapTypeButton] animated:animated];
     
@@ -839,6 +854,10 @@
     }else if([self isNamingNewFence]){
         [self deleteFence];
     }
+}
+
+- (void) changeAndSaveMapTypeWithSegmentedControl:(UISegmentedControl *)sender{
+    [self changeAndPersistMapType:[sender selectedSegmentIndex]];
 }
 
 - (void)changeAndPersistMapType:(NSInteger)mapType{
