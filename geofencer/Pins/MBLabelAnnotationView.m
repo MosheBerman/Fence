@@ -22,6 +22,7 @@
 }
 
 - (void)setDragState:(MKAnnotationViewDragState)newDragState animated:(BOOL)animated{
+    self.dragState = newDragState;
     if (newDragState == MKAnnotationViewDragStateStarting) {
         self.dragState = MKAnnotationViewDragStateDragging;
     }else if(newDragState == MKAnnotationViewDragStateEnding || newDragState == MKAnnotationViewDragStateCanceling){
