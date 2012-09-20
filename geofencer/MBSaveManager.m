@@ -134,20 +134,23 @@
 
 - (BOOL) saveFence:(MBGeofence *)fence toDirectory:(NSURL *)directory asJSON:(BOOL)useJSON{
     
-    NSString *suffix = useJSON ? @"json" : @"plist";
+    NSString *suffix = useJSON ? @"geojson" : @"plist";
     
     NSString *fileName = [NSString stringWithFormat:@"%@.%@", [fence name], suffix];
     NSURL *url = [directory URLByAppendingPathComponent:fileName];
     
     NSArray *fenceArray = [fence asArray];
     
-    NSDictionary *fenceDictionary = [fence asDictionary];
+    NSDictionary *fenceDictionary = [fence asGeoJSON];
     
     if(useJSON){
         
         NSError *error = nil;
-        if([[NSJSONSerialization dataWithJSONObject:fenceDictionary options:0 error:&error] writeToFile:[url path] atomically:NO]){
+        if(![[NSJSONSerialization dataWithJSONObject:fenceDictionary options:0 error:&error] writeToFile:[url path] atomically:NO]){
             
+            //
+            //  There's an error.
+            //
         }
         
         
@@ -270,7 +273,7 @@
     
     NSPredicate *containsXML = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         
-        return [evaluatedObject rangeOfString:@".json"].location != NSNotFound;
+        return [evaluatedObject rangeOfString:@".geojson"].location != NSNotFound;
         
     }];
     
