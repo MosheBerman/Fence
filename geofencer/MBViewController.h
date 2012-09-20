@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "MBGeofence.h"
-#import "MBAnnotationView.h"
-
+#import "MBLabelAnnotationView.h"
+#import "MBPointAnnotationView.h"
 
 @interface MBViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 

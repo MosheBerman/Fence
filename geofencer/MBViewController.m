@@ -270,7 +270,7 @@
         //  Make a view for the annotation title
         //
         
-        MBAnnotationView *annotationView = (MBAnnotationView*)[[self mapView] dequeueReusableAnnotationViewWithIdentifier:reuse];
+        MBLabelAnnotationView *annotationView = (MBLabelAnnotationView*)[[self mapView] dequeueReusableAnnotationViewWithIdentifier:reuse];
         
         //
         //  Prepare to set up the label
@@ -295,7 +295,7 @@
         //
         
         if(!annotationView){
-            annotationView = [[MBAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuse];
+            annotationView = [[MBLabelAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuse];
             
             //
             //  Set up a title label
@@ -354,12 +354,11 @@
         //
         
         static NSString *annotationIdentifier = @"annotation";
-        MKPinAnnotationView *pin = (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationIdentifier];
+        MBPointAnnotationView *pin = (MBPointAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:annotationIdentifier];
         
         if (!pin) {
-            pin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
+            pin = [[MBPointAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
             
-            pin.pinColor = MKPinAnnotationColorRed;
             pin.canShowCallout = YES;
             pin.draggable = YES;
         }
@@ -570,7 +569,7 @@
     
     MBGeofence *fence = [[self fences] fenceContainingPoint:userLocation.location.coordinate];
     NSString *string = [fence name] ? [fence name] : @"No fence";
-    NSLog(@"User is in fence called: %@", string);
+//    NSLog(@"User is in fence called: %@", string);
 
 }
 
