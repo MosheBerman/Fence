@@ -35,7 +35,7 @@
 
 - (void) addLocation:(CLLocationCoordinate2D)location{
     MBCoordinate *coordinate = [[MBCoordinate alloc] initWithLatitude:location.latitude andLongitude:location.longitude];
-    [[self points] addObject:coordinate];
+    [self insertCoordinateBetweenClosestNeighbors:coordinate];
     [self touch];
 }
 
@@ -161,93 +161,129 @@
 //  Detect which coordinate is the closest to the supplied coordinate
 //
 
-- (MBCoordinate *) coordinateClosestToCoordinate:(MBCoordinate *)coordinate{
+- (void) insertCoordinateBetweenClosestNeighbors:(MBCoordinate *)coordinate{
     
-    if (![self points] || [[self points] count] < 2) {
-        return nil;
+    if (![self points] || [[self points] count] < 3) {
+        [[self points] addObject:coordinate];
+        return;
     }
 
-    MBCoordinate *closestCoordinate = nil;
-
-    CGPoint closestDistance;
-
-    for(NSInteger  i = 0; i < [[self points] count]; i++){
+    NSMutableSet *pointSet = [NSMutableSet setWithArray:[self points]];
+    
+    MBCoordinate *closestCoordinate = [self closestCoordinateToCoordinate:coordinate inSet:pointSet];
+    [pointSet removeObject:closestCoordinate];
+    
+    MBCoordinate *nextClosestCoordinate = [self closestCoordinateToCoordinate:coordinate inSet:pointSet];
+   
+    NSUInteger indexOfClosestCoordinate, indexOfSecondClosestCoordinate, insertionIndex;
+    
+    
+    for (NSUInteger i=0; i < [[self points] count]; i++) {
         
-        if(coordinate == [self points][i]){
+        if ([[self points][i] isEqual:closestCoordinate]) {
+            indexOfClosestCoordinate = i;
+        }
+        
+        if ([[self points][i] isEqual:nextClosestCoordinate]) {
+            indexOfSecondClosestCoordinate = i;
+        }
+    }
+    
+    if(indexOfSecondClosestCoordinate == indexOfClosestCoordinate-1){
+        insertionIndex = indexOfSecondClosestCoordinate+1;
+    }else{
+        insertionIndex = indexOfClosestCoordinate+1;
+    }
+    
+    [[self points] insertObject:coordinate atIndex:insertionIndex];
+     
+     /*
+    [[self points] addObject:coordinate];
+    [self sortPointsByDistance];
+     */
+}
+
+- (void) sortPointsByDistance{
+    
+    //
+    //  TODO: Sort all of the points based upon their distance from the previous point.
+    //
+    
+    NSMutableSet *unsortedPoints = [NSMutableSet setWithArray:[self points]];
+    
+    NSMutableArray *sortedPoints = [@[] mutableCopy];
+    
+    MBCoordinate *workingCoordinate = [self points][0];
+    [sortedPoints addObject:workingCoordinate];
+    
+    while([unsortedPoints count] > 0){
+    
+        MBCoordinate *closestCoordinate = [self closestCoordinateToCoordinate:workingCoordinate inSet:unsortedPoints];
+
+        [sortedPoints addObject:closestCoordinate];
+        [unsortedPoints removeObject:closestCoordinate];
+        
+        workingCoordinate = closestCoordinate;        
+    }
+    
+    [self setPoints:sortedPoints];
+}
+
+- (MBCoordinate *) closestCoordinateToCoordinate:(MBCoordinate *)coordinate inSet:(NSSet *)aSet{
+
+    MBCoordinate *closest = nil;
+    CGFloat closestDistance;
+    
+    for (MBCoordinate *coordinateInSet in aSet) {
+        
+        if ([coordinateInSet isEqual:coordinate]) {
             continue;
         }
         
-        if(!closestCoordinate){
-            closestCoordinate = [self points][i];
-            closestDistance = [self distanceBetweenCoordinate:coordinate andCoordinate:closestCoordinate];
+        if (!closest) {
+            closest = coordinateInSet;
+            closestDistance = [self distanceBetweenCoordinate:coordinate andCoordinate:coordinateInSet];
         }
         
-        CGPoint nextDistance = [self distanceBetweenCoordinate:[self points][i] andCoordinate:closestCoordinate];
+        CGFloat distanceBetweenPoints = [self distanceBetweenCoordinate:coordinate andCoordinate:coordinateInSet];
         
-        if(nextDistance.x < closestDistance.x && nextDistance.y < closestDistance.y){
-            nextDistance = closestDistance;
-            closestCoordinate = [self points][i];
+        if (distanceBetweenPoints < closestDistance) {
+            closest = coordinateInSet;
+            closestDistance = distanceBetweenPoints;
         }
+        
         
     }
-
-    return closestCoordinate;
+    
+    return closest;
 }
 
 //
 //  Determines the distance between two coordinates
 //
 
-- (CGPoint) distanceBetweenCoordinate:(MBCoordinate *)coordinate andCoordinate:(MBCoordinate *)anotherCoordinate{
+- (CGFloat) distanceBetweenCoordinate:(MBCoordinate *)coordinate andCoordinate:(MBCoordinate *)anotherCoordinate{
     
     CGFloat xDistance, yDistance;
     
-    xDistance = abs(coordinate.latitude-anotherCoordinate.latitude);
-    yDistance = abs(coordinate.longitude-anotherCoordinate.longitude);
-    
-    return CGPointMake(xDistance, yDistance);
-    
-}
+    xDistance = coordinate.latitude-anotherCoordinate.latitude;
+    yDistance = coordinate.longitude-anotherCoordinate.longitude;
 
-//
-//  Reorganizes the points based on closest distance
-//
-//  FIXME: Make this algorithm work.
-//
-
-- (void) reorganizeByDistance{
-
-    return;
+    float distance = xDistance/yDistance;
     
-    if ([[self points] count] < 3) {
-        return;
+    //
+    //  Absolute value of floats...
+    //
+    
+    
+    if (distance < 0) {
+        distance *= -1;
     }
     
-    id nextCoordinate = [self points][0];
+    return distance;
     
-    [[self points] sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-       
-        CGPoint distanceBetweenOriginalAndFirst = [self distanceBetweenCoordinate:obj1 andCoordinate:nextCoordinate];
-        CGPoint distanceBetweenOriginalAndSecond = [self distanceBetweenCoordinate:obj2 andCoordinate:nextCoordinate];
-        
-        __block id nextCoordinate;
-        
-        nextCoordinate = obj1;
-        
-        NSComparisonResult result = NSOrderedAscending;
-        
-        if (distanceBetweenOriginalAndFirst.x > distanceBetweenOriginalAndSecond.x && distanceBetweenOriginalAndFirst.y > distanceBetweenOriginalAndSecond.y) {
-            result = NSOrderedDescending;
-        }else if (distanceBetweenOriginalAndFirst.x == distanceBetweenOriginalAndSecond.x && distanceBetweenOriginalAndFirst.y == distanceBetweenOriginalAndSecond.y) {
-            result = NSOrderedSame;
-        }
-        
-        //
-        return result;
-    }];
-    
-    [self touch];
 }
+
 
 - (void) touch{
     [self setModifiedDate:[NSDate date]];

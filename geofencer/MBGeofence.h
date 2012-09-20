@@ -37,6 +37,4 @@
 
 - (void) removeAllObjects;
 
-- (void) reorganizeByDistance;
-
 @end
