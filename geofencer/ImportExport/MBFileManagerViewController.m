@@ -245,7 +245,7 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
         //  Copy fences over to documents directory
         //  fail if a fence fails.
         
-                MBGeofence *fence = [[self saveManager] fenceWithNameInLibrary:fenceName];
+        MBGeofence *fence = [[self saveManager] fenceWithNameInLibrary:fenceName];
         
         if (![[self saveManager] saveFenceToDocumentsDirectory:fence]){
             successful = NO;
