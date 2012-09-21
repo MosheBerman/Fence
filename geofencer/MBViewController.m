@@ -81,12 +81,21 @@
     
     [self configureGestures];
     [self configureButtonsWithAnimation:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didHideFileManagerWithNotification:) name:kDidHideFileManagerNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [self deactivateActiveFence];
     [super viewWillDisappear:animated];
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation{
@@ -588,6 +597,7 @@
 
 }
 
+
 #pragma mark - Render and Save
 
 - (void)renderAnnotations{
@@ -818,7 +828,14 @@
     [self presentViewController:importNavController animated:YES completion:nil];
 }
 
-
+- (void) didHideFileManagerWithNotification:(NSNotification*)notification{
+    MBGeofenceCollection *fences = [notification object];
+    
+    if (fences) {
+        [self setFences:fences];        
+        [self renderAnnotations];
+    }
+}
 
 #pragma mark - Alert View Delegate
 

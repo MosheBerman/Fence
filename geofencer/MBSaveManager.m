@@ -95,15 +95,11 @@
 
 - (MBGeofence *) fenceWithName:(NSString *)name inDirectory:(NSURL *)url{
     
-    
-    
     NSData *data = [NSData dataWithContentsOfURL:[url filePathURL]];
     
     if (!data) {
         return nil;
     }
-    
-    
     
     NSError *error = nil;
     
@@ -114,16 +110,18 @@
         return nil;
     }
     
-    MBGeofence *fence = [[MBGeofence alloc] initWithName:dictionary[@"name"]];
+    NSString *storedFenceName = [dictionary[@"properties"][@"name"] stringByReplacingOccurrencesOfString:@".geojson" withString:@""];
     
-    NSArray *coords = dictionary[@"coordinates"];
+    MBGeofence *fence = [[MBGeofence alloc] initWithName:storedFenceName];
     
+    NSArray *coords = dictionary[@"coordinates"][0];
+       
     //
     //  Iterate the coordinates
     //
     
     for (NSInteger j =0; j<coords.count; j++) {
-        NSDictionary *coordDict = coords[j][0];
+        NSDictionary *coordDict = coords[j];
         CLLocationCoordinate2D location = CLLocationCoordinate2DMake([coordDict[@"latitude"] doubleValue], [coordDict[@"longitude"] doubleValue]);
         [fence addLocation:location];
     }

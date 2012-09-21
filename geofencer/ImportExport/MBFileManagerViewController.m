@@ -180,6 +180,12 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
     [self importFences:[self actionQueue] completion:^(BOOL successful) {
         if (successful) {
            [self dismiss];
+            UIAlertView *alert = [[UIAlertView alloc]
+                                  initWithTitle:NSLocalizedString(@"Import Successful", @"A title informing the user that thier fence(s) has been exported")
+                                  message:NSLocalizedString(@"Your Fence(s) have been exported and can be found in iTunes.", @"A message informing the user that their Fences have been exported.")
+                                  delegate:nil
+                                  cancelButtonTitle:NSLocalizedString(@"OK", @"A button to dismiss an alert.") otherButtonTitles: nil];
+            [alert show];
         }else{
             //  TODO: Failed to import, show some sort of error.
         }
@@ -190,6 +196,13 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
     [self exportFences:[self actionQueue] completion:^(BOOL successful) {
         if (successful) {
             [self dismiss];
+            
+            UIAlertView *alert = [[UIAlertView alloc]
+                                  initWithTitle:NSLocalizedString(@"Export Successful", @"A title informing the user that thier fence has been exported")
+                                  message:NSLocalizedString(@"Your Fence(s) have been imported and can be found in the open menu.", @"A message informing the user that their Fences have been import.")
+                                  delegate:nil
+                                  cancelButtonTitle:NSLocalizedString(@"OK", @"A button to dismiss an alert.") otherButtonTitles: nil];
+            [alert show];
         }else{
             //  TODO: Failed to import, show some sort of error.
         }
@@ -206,11 +219,9 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
     }];
 }
 
-
-
 - (void) dismiss{
-    [[NSNotificationCenter defaultCenter] postNotificationName:kDidHideFileManagerNotification object:[self fences]];
     [[[self navigationController] presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDidHideFileManagerNotification object:[self fences]];
 }
 
 #pragma mark - Import/Export/Open Method
