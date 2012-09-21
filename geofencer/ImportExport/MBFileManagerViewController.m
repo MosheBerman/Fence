@@ -138,6 +138,7 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         return;
     }
+    
     NSInteger index = [indexPath row];
     NSString *selectedObject = availableItems[index];
     
