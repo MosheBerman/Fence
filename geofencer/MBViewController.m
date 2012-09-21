@@ -606,13 +606,13 @@
     }
 }
 
-- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
-    
-    MBGeofence *fence = [[self fences] fenceContainingPoint:userLocation.location.coordinate];
-    NSString *string = [fence name] ? [fence name] : @"No fence";
-//    NSLog(@"User is in fence called: %@", string);
-
-}
+//- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
+//    
+//    MBGeofence *fence = [[self fences] fenceContainingPoint:userLocation.location.coordinate];
+//    NSString *string = [fence name] ? [fence name] : @"No fence";
+////    NSLog(@"User is in fence called: %@", string);
+//
+//}
 
 
 #pragma mark - Render and Save
