@@ -133,6 +133,11 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSArray *availableItems = [[self saveManager] JSONFilesAvailableForExport];
+    
+    if ([availableItems count] == 0) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        return;
+    }
     NSInteger index = [indexPath row];
     NSString *selectedObject = availableItems[index];
     
@@ -182,7 +187,7 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
            [self dismiss];
             UIAlertView *alert = [[UIAlertView alloc]
                                   initWithTitle:NSLocalizedString(@"Import Successful", @"A title informing the user that thier fence(s) has been exported")
-                                  message:NSLocalizedString(@"Your Fence(s) have been imported and can be found in iTunes.", @"A message informing the user that their Fences have been imported.")
+                                  message:NSLocalizedString(@"Your Fence(s) have been imported and can be found in iTunes.", @"A message informing the user that their Fences have been exported.")
                                   delegate:nil
                                   cancelButtonTitle:NSLocalizedString(@"OK", @"A button to dismiss an alert.") otherButtonTitles: nil];
             [alert show];
