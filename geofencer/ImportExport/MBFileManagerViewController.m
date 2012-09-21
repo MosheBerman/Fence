@@ -16,7 +16,7 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
 @property (strong, nonatomic) IBOutlet UITableView *fileTableView;
 @property (strong, nonatomic) MBSaveManager *saveManager;
 @property (strong, nonatomic) MBGeofenceCollection *fences;
-@property (strong, nonatomic) NSMutableArray *importQueue;
+@property (strong, nonatomic) NSMutableArray *actionQueue;
 @property (assign, nonatomic) FileMode mode;
 @end
 
@@ -29,7 +29,7 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
     if (self) {
         _fences = collection;
         _saveManager = [[MBSaveManager alloc] init];
-        _importQueue = [@[] mutableCopy];
+        _actionQueue = [@[] mutableCopy];
         _mode = mode;
     }
     
@@ -67,25 +67,24 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
 #pragma mark - UITableView Delegate 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
+
     NSUInteger numberOfJSONFiles = [[self saveManager] numberOfJSONFilesAvailableForImport];
     
-    NSUInteger numberOfXMLFiles = [[self saveManager] numberOfXMLFilesAvailableForImport];
-    
-    if (section == 0) {
-        return MAX(numberOfJSONFiles, 1);
+    if ([self mode] == kFileOpen) {
+        numberOfJSONFiles = [[self saveManager] numberOfJSONFilesAvailableForOpen];
+    }else if([self mode] == kFileExport){
+        numberOfJSONFiles = [[self saveManager] numberOfJSONFilesAvailableForExport];
     }
-    
-    return MAX(numberOfXMLFiles, 1);
+
+    return MAX(numberOfJSONFiles, 1);
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 2;
+    return 1;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     
     static NSString *cellIdentifier = @"cellIdentifier";
     
@@ -98,12 +97,12 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
     
     NSUInteger row = [indexPath row];
     
-    NSUInteger section = [indexPath section];
-    
     NSArray *results = [[self saveManager] JSONFilesAvailableForImport];
     
-    if (section == 1) {
-        results = [[self saveManager] XMLFilesAvailableForImport];
+    if ([self mode] == kFileOpen) {
+        results = [[self saveManager] JSONFilesAvailableForOpen];
+    }else if([self mode] == kFileExport){
+        results = [[self saveManager] JSONFilesAvailableForExport];
     }
     
     
@@ -117,26 +116,58 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
         title = results[row];
         [[cell textLabel] setTextAlignment:NSTextAlignmentLeft];
         [[cell textLabel] setTextColor:[UIColor blackColor]];
+        
+        [cell setAccessoryType:UITableViewCellEditingStyleNone];
+        
+        title = results[row];
     }
     
     [[cell textLabel] setText:title];
     
+    if ([[self actionQueue] containsObject:title]) {
+        [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+    }
+    
     return cell;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    if (section == 0) {
-        return NSLocalizedString(@"GeoJSON Files", @"A title for the section of the table which shows JSON files");
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSArray *availableItems = [[self saveManager] JSONFilesAvailableForExport];
+    NSInteger index = [indexPath row];
+    NSString *selectedObject = availableItems[index];
+    
+    if(![[self actionQueue] containsObject:selectedObject]){
+        [[self actionQueue] addObject:selectedObject];
+    }else{
+        [[self actionQueue] removeObject:selectedObject];
     }
     
-    return NSLocalizedString(@"Property Lists", @"A title for the section of the table which shows JSON files");
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    return NSLocalizedString(@"GeoJSON Files", @"A title for the section of the table which shows JSON files");
 }
 
 #pragma mark - UIBarButton Items
 
 - (void) configureButtons{
     
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Import", @"A button for the import view to begin the import process.") style:UIBarButtonItemStyleDone target:self action:@selector(importAndDismiss)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:nil style:UIBarButtonItemStyleDone target:self action:@selector(importAndDismiss)];
+    
+    NSString *title = NSLocalizedString(@"Import", @"A button for the import view to begin the import process.");
+    
+    if ([self mode] == kFileOpen) {
+        title = NSLocalizedString(@"Open", @"A button to open files");
+        [doneButton setAction:@selector(openFences)];
+    }else if([self mode] == kFileExport){
+        title = NSLocalizedString(@"Export", @"A button to export files");
+        [doneButton setAction:@selector(exportAndDismiss)];
+    }
+    
+    [doneButton setTitle:title];
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(importAndDismiss)];
     
@@ -146,7 +177,7 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
 }
 
 - (void) importAndDismiss{
-    [self importFences:[self importQueue] completion:^(BOOL successful) {
+    [self importFences:[self actionQueue] completion:^(BOOL successful) {
         if (successful) {
            [self dismiss];
         }else{
@@ -155,20 +186,92 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
     }];
 }
 
+- (void) exportAndDismiss{
+    [self exportFences:[self actionQueue] completion:^(BOOL successful) {
+        if (successful) {
+            [self dismiss];
+        }else{
+            //  TODO: Failed to import, show some sort of error.
+        }
+    }];
+}
+
+- (void) openFences{
+    [self openFences:[self actionQueue] completion:^(BOOL successful) {
+        if (successful) {
+            [self dismiss];
+        }else{
+            //  TODO: Failed to import, show some sort of error.
+        }
+    }];
+}
+
+
+
 - (void) dismiss{
     [[[self navigationController] presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - Import Method
+#pragma mark - Import/Export/Open Method
 
 - (void) importFences:(NSArray *)fencesToImport completion:(MBFileOperationCompletionBlock)completion{
  
     BOOL successful = YES;
     
-    for (NSString *fence in [self importQueue]) {
+    for (NSString *fenceName in [self actionQueue]) {
         
         //  Copy fences over to caches directory
         //  fail if a fence fails.
+        
+        MBGeofence *fence = [[self saveManager] fenceWithNameInDocumentsDirectory:fenceName];
+        
+        if (![[self saveManager] saveFenceToLibrary:fence]){
+            successful = NO;
+            break;
+        }
+    }
+    
+    if (completion) {
+        completion(successful);
+    }
+}
+
+- (void) exportFences:(NSArray *)fencesToImport completion:(MBFileOperationCompletionBlock)completion{
+    
+    BOOL successful = YES;
+    
+    for (NSString *fenceName in [self actionQueue]) {
+        
+        //  Copy fences over to documents directory
+        //  fail if a fence fails.
+        
+                MBGeofence *fence = [[self saveManager] fenceWithNameInLibrary:fenceName];
+        
+        if (![[self saveManager] saveFenceToDocumentsDirectory:fence]){
+            successful = NO;
+            break;
+        }
+    }
+    
+    if (completion) {
+        completion(successful);
+    }
+}
+
+
+- (void) openFences:(NSArray *)fencesToImport completion:(MBFileOperationCompletionBlock)completion{
+    
+    BOOL successful = YES;
+    
+    for (NSString *fenceName in [self actionQueue]) {
+        
+        //  Copy fences over to the fence colletion
+        //  fail if a fence fails.
+        
+        MBGeofence *fence = [[self saveManager] fenceWithNameInLibrary:fenceName];
+        
+        [[self fences] addFence:fence andMakeActive:NO];
+        
     }
     
     if (completion) {

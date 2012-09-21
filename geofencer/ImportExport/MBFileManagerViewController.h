@@ -10,8 +10,8 @@
 
 #import "MBGeofenceCollection.h"
 
-typedef NSUInteger FileMode
-;
+typedef NSUInteger FileMode;
+
 enum kFileManagerMode {
     kFileImport = 0,
     kFileExport = 1,
