@@ -356,6 +356,7 @@
             UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
             [infoButton setShowsTouchWhenHighlighted:NO];
             [annotationView setRightCalloutAccessoryView:infoButton];
+    
         }                
         
         
@@ -565,6 +566,10 @@
             }
         }
     }
+    
+    //
+    //  TODO: Show a custom banner instead of popover
+    //
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control{
