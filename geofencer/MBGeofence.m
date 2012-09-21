@@ -135,9 +135,14 @@
 - (NSDictionary*) asDictionary{
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     
+    NSString *name = [self name];
+    NSString *modified = [[self modifiedDate] description];
+    NSString *created = [[self creationDate] description];
+
     dictionary[@"coordinates"] = @[[[self asArray] mutableCopy]];
     dictionary[@"type"] = @"MultiPolygon";
-    dictionary[@"properties"] = @{@"modified":[[self modifiedDate] description], @"created":[[self creationDate] description]};
+    dictionary[@"properties"] = @{@"created":created, @"modified":modified, @"name":name};
+    
     return dictionary;
     
 }
