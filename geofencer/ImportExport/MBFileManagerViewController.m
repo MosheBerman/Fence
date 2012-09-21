@@ -169,7 +169,7 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
     
     [doneButton setTitle:title];
     
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(importAndDismiss)];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
     
     [[self navigationItem] setRightBarButtonItem:doneButton];
     
