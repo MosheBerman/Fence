@@ -29,6 +29,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    //
+    //  
+    //
+    
+    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(next)];
+    [[self navigationItem] setRightBarButtonItem:buttonItem animated:YES];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -37,4 +44,8 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+- (void) next{
+    [[[self navigationController] presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+}
 @end
