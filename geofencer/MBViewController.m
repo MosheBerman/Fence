@@ -81,12 +81,12 @@
     
     [self configureGestures];
     [self configureButtonsWithAnimation:YES];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didHideFileManagerWithNotification:) name:kDidHideFileManagerNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didHideFileManagerWithNotification:) name:kDidHideFileManagerNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
