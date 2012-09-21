@@ -18,7 +18,7 @@
 @property (strong, nonatomic) MBGeofence *workingGeofence;
 
 - (MBGeofence *) newFence;
-//- (void) addFence:(MBGeofence *)fence andMakeActive:(BOOL)newFenceShouldBecomeActive;
+- (void) addFence:(MBGeofence *)fence andMakeActive:(BOOL)newFenceShouldBecomeActive;
 - (void) closeActiveFence;
 
 - (void) deactivateActiveFence;
