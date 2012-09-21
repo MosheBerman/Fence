@@ -76,13 +76,77 @@
     return tempArray;
 }
 
+#pragma mark - Fence From Name
+
+- (MBGeofence *) fenceWithNameInLibrary:(NSString *)name{
+
+    NSString *fileName = [NSString stringWithFormat:@"%@", name];
+    NSURL *url = [[self applicationLibraryDirectory] URLByAppendingPathComponent:fileName];
+    
+    return [self fenceWithName:name inDirectory:url];
+}
+
+- (MBGeofence *) fenceWithNameInDocumentsDirectory:(NSString *)name{
+    NSString *fileName = [NSString stringWithFormat:@"%@", name];
+    NSURL *url = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:fileName];
+    
+    return [self fenceWithName:name inDirectory:url];   
+}
+
+- (MBGeofence *) fenceWithName:(NSString *)name inDirectory:(NSURL *)url{
+    
+    
+    
+    NSData *data = [NSData dataWithContentsOfURL:[url filePathURL]];
+    
+    if (!data) {
+        return nil;
+    }
+    
+    
+    
+    NSError *error = nil;
+    
+    NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+    
+    if (error) {
+        
+        return nil;
+    }
+    
+    MBGeofence *fence = [[MBGeofence alloc] initWithName:dictionary[@"name"]];
+    
+    NSArray *coords = dictionary[@"coordinates"];
+    
+    //
+    //  Iterate the coordinates
+    //
+    
+    for (NSInteger j =0; j<coords.count; j++) {
+        NSDictionary *coordDict = coords[j][0];
+        CLLocationCoordinate2D location = CLLocationCoordinate2DMake([coordDict[@"latitude"] doubleValue], [coordDict[@"longitude"] doubleValue]);
+        [fence addLocation:location];
+    }
+    
+    return fence;
+}
+
 #pragma mark - Save Methods
 
 - (BOOL) saveFenceToLibrary:(MBGeofence *)fence {
-    return [self saveFence:fence toDirectory:[self applicationLibraryDirectory] asJSON:NO];
+    return [self saveFence:fence toDirectory:[self applicationLibraryDirectory] asJSON:YES];
+}
+
+- (BOOL) saveFenceToDocumentsDirectory:(MBGeofence *)fence {
+    return [self saveFence:fence toDirectory:[self applicationDocumentsDirectory] asJSON:YES];
 }
 
 - (BOOL) saveFence:(MBGeofence *)fence toDirectory:(NSURL *)directory asJSON:(BOOL)useJSON{
+    
+    
+    if (!fence) {
+        return NO;
+    }
     
     NSString *suffix = useJSON ? @"geojson" : @"plist";
     
@@ -91,7 +155,7 @@
     
     NSArray *fenceArray = [fence asArray];
     
-    NSDictionary *fenceDictionary = [fence asGeoJSON];
+    NSDictionary *fenceDictionary = [fence asDictionary];
     
     if(useJSON){
         
@@ -102,7 +166,6 @@
             //  There's an error.
             //
         }
-        
         
         return error == nil;
     }
@@ -169,15 +232,6 @@
 
 #pragma mark - File Import Methods
 
-- (NSUInteger) numberOfJSONFilesAvailableForImport{
-    return [[self JSONFilesAvailableForImport] count];
-}
-
-- (NSUInteger) numberOfXMLFilesAvailableForImport{
-    return [[self XMLFilesAvailableForImport] count];
-}
-
-
 - (NSArray *)contentsOfDirectoryAtPath:(NSString *)path{
 
     
@@ -192,36 +246,52 @@
     return results;
 }
 
-- (NSArray *) XMLFilesAvailableForImport{
-    
-    
-    NSString *applicationDocuments = [[self applicationDocumentsDirectory] path];
-    
-    NSArray *unfilteredResults = [self contentsOfDirectoryAtPath:applicationDocuments];
-    
-    NSPredicate *containsXML = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        
-        return [evaluatedObject rangeOfString:@".plist"].location != NSNotFound;
-        
-    }];
-    
-    return [unfilteredResults filteredArrayUsingPredicate:containsXML];
-}
-
 - (NSArray *) JSONFilesAvailableForImport{
     
     NSString *applicationDocuments = [[self applicationDocumentsDirectory] path];
     
     NSArray *unfilteredResults = [self contentsOfDirectoryAtPath:applicationDocuments];
     
-    NSPredicate *containsXML = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    NSPredicate *containsJSON = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         
         return [evaluatedObject rangeOfString:@".geojson"].location != NSNotFound;
         
     }];
     
-    return [unfilteredResults filteredArrayUsingPredicate:containsXML];
+    return [unfilteredResults filteredArrayUsingPredicate:containsJSON];
 }
+
+- (NSArray *) JSONFilesAvailableForExport{
+    NSString *applicationDocuments = [[self applicationLibraryDirectory] path];
+    
+    NSArray *unfilteredResults = [self contentsOfDirectoryAtPath:applicationDocuments];
+    
+    NSPredicate *containsJSON = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        
+        return [evaluatedObject rangeOfString:@".geojson"].location != NSNotFound;
+        
+    }];
+    
+    return [unfilteredResults filteredArrayUsingPredicate:containsJSON];
+}
+
+- (NSArray *) JSONFilesAvailableForOpen{
+    return [self JSONFilesAvailableForExport];
+}
+
+- (NSUInteger) numberOfJSONFilesAvailableForImport{
+    return [[self JSONFilesAvailableForImport] count];
+}
+
+- (NSUInteger) numberOfJSONFilesAvailableForExport{
+    return [[self JSONFilesAvailableForExport] count];
+}
+
+- (NSUInteger) numberOfJSONFilesAvailableForOpen{
+    return [[self JSONFilesAvailableForOpen] count];
+}
+
+
 
 
 @end

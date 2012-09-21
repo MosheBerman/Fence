@@ -14,15 +14,25 @@
 
 - (BOOL) saveFences:(MBGeofenceCollection *)fences toDirectory:(NSURL *)directory;
 - (BOOL) saveFence:(MBGeofence *)fence toDirectory:(NSURL *)directory asJSON:(BOOL)useJSON;
+
 - (BOOL) saveFenceToLibrary:(MBGeofence *)fence;
+- (BOOL) saveFenceToDocumentsDirectory:(MBGeofence *)fence;
 
 - (BOOL) deleteFenceNamed:(NSString *)name;
 
+#pragma mark - Name to Fence Method
+
+- (MBGeofence *) fenceWithNameInLibrary:(NSString *)name;
+- (MBGeofence *) fenceWithNameInDocumentsDirectory:(NSString *)name;
+
 #pragma mark - File Import Methods
 
-- (NSUInteger) numberOfJSONFilesAvailableForImport;
-- (NSUInteger) numberOfXMLFilesAvailableForImport;
-
-- (NSArray *) XMLFilesAvailableForImport;
 - (NSArray *) JSONFilesAvailableForImport;
+- (NSArray *) JSONFilesAvailableForExport;
+- (NSArray *) JSONFilesAvailableForOpen;
+
+- (NSUInteger) numberOfJSONFilesAvailableForImport;
+- (NSUInteger) numberOfJSONFilesAvailableForExport;
+- (NSUInteger) numberOfJSONFilesAvailableForOpen;
+
 @end
