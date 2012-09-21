@@ -32,7 +32,6 @@
 
 - (NSArray *)asArray;
 - (NSDictionary*) asDictionary;
-- (NSDictionary *) asGeoJSON;
 
 
 - (void) removeAllObjects;

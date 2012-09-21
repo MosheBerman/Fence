@@ -137,24 +137,9 @@
     
     dictionary[@"coordinates"] = @[[[self asArray] mutableCopy]];
     dictionary[@"type"] = @"MultiPolygon";
+    dictionary[@"properties"] = @{@"modified":[[self modifiedDate] description], @"Created":[[self creationDate] description]};
     return dictionary;
     
-}
-
-//
-//  Returns a dictionary, where the
-//  first and last point match as per
-//  the GeoJSON spec via Apple.
-//
-
-- (NSDictionary *) asGeoJSON{
-    NSDictionary *geoJSON = [self asDictionary];
-    
-    //Add that first point to the proper array
-    MBCoordinate *coordinate = [[geoJSON[@"coordinates"][0] lastObject] copy];
-    [geoJSON[@"coordinates"][0] insertObject:coordinate atIndex:0];
-    
-    return geoJSON;
 }
 
 //
