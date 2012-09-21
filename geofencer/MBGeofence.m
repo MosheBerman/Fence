@@ -137,7 +137,7 @@
     
     dictionary[@"coordinates"] = @[[[self asArray] mutableCopy]];
     dictionary[@"type"] = @"MultiPolygon";
-    dictionary[@"properties"] = @{@"modified":[[self modifiedDate] description], @"Created":[[self creationDate] description]};
+    dictionary[@"properties"] = @{@"modified":[[self modifiedDate] description], @"created":[[self creationDate] description]};
     return dictionary;
     
 }
