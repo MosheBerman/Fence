@@ -209,6 +209,7 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
 
 
 - (void) dismiss{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDidHideFileManagerNotification object:[self fences]];
     [[[self navigationController] presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 

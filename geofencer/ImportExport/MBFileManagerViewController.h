@@ -10,6 +10,8 @@
 
 #import "MBGeofenceCollection.h"
 
+#define kDidHideFileManagerNotification @"did hide file manager"
+
 typedef NSUInteger FileMode;
 
 enum kFileManagerMode {
