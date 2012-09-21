@@ -13,7 +13,7 @@
 #import "MBSaveManager.h"
 
 #import "MBFileManagerViewController.h"
-
+#import "MBWelcomeViewController.h"
 
 #define kImportFencesTitle NSLocalizedString(@"Import", @"The title for the import button.")
 #define kExportFencesTitle NSLocalizedString(@"Export", @"The title for the export button.")
@@ -87,6 +87,18 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"didShowWelcome"]){
+        
+        
+        MBWelcomeViewController *welcomeViewController = [[MBWelcomeViewController alloc] initWithNibName:@"MBWelcomeViewController" bundle:nil];
+        UINavigationController *welcomeNavigationController = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
+        
+        [welcomeNavigationController setModalPresentationStyle:UIModalPresentationFormSheet];
+        [self presentViewController:welcomeNavigationController animated:YES completion:nil];
+
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"didShowWelcome"];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
