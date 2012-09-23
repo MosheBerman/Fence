@@ -811,9 +811,8 @@
 }
 
 - (void) closeFence{
+    [self deactivateActiveFence];
     [[self fences] closeActiveFence];
-    [self configureButtonsWithAnimation:NO];
-    [self renderAnnotations];
 }
 
 - (void) deleteFence{
