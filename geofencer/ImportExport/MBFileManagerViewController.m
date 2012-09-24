@@ -188,7 +188,7 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
            [self dismiss];
             UIAlertView *alert = [[UIAlertView alloc]
                                   initWithTitle:NSLocalizedString(@"Import Successful", @"A title informing the user that thier fence(s) has been exported")
-                                  message:NSLocalizedString(@"Your Fence(s) have been imported and can be found in iTunes.", @"A message informing the user that their Fences have been exported.")
+                                  message:NSLocalizedString(@"Your Fence(s) have been imported and can be found in the open menu.", @"A message informing the user that their Fences have been exported.")
                                   delegate:nil
                                   cancelButtonTitle:NSLocalizedString(@"OK", @"A button to dismiss an alert.") otherButtonTitles: nil];
             [alert show];
@@ -205,7 +205,7 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
             
             UIAlertView *alert = [[UIAlertView alloc]
                                   initWithTitle:NSLocalizedString(@"Export Successful", @"A title informing the user that thier fence has been exported")
-                                  message:NSLocalizedString(@"Your Fence(s) have been exported and can be found in the open menu.", @"A message informing the user that their Fences have been exported.")
+                                  message:NSLocalizedString(@"Your Fence(s) have been exported and can be found in iTunes.", @"A message informing the user that their Fences have been exported.")
                                   delegate:nil
                                   cancelButtonTitle:NSLocalizedString(@"OK", @"A button to dismiss an alert.") otherButtonTitles: nil];
             [alert show];
