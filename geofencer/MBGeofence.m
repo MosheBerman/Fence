@@ -186,101 +186,7 @@
     }
     
     [[self points] insertObject:coordinate atIndex:insertionIndex];
-     
-     /*
-    [[self points] addObject:coordinate];
-    [self sortPointsByDistance];
-     */
-}
 
-- (void) sortPointsByDistance{
-    
-    //
-    //  Points that need sorting
-    //
-    
-    NSMutableSet *unprocessedPoints = [NSMutableSet setWithArray:[self points]];
-    
-    //
-    //  All of the unsorted points
-    //
-    
-    NSMutableSet *unsortedPoints = [NSMutableSet setWithArray:[self points]];
-
-    //
-    //  The unsorted points minus the closest one
-    //
-    
-    NSMutableSet *unsortedPointsExceptClosest = [NSMutableSet setWithArray:[self points]];
-    
-    //
-    //  We put the point into here in the correct order
-    //
-    
-    NSMutableArray *sortedPoints = [@[] mutableCopy];
-    
-    
-    //
-    //  Prime the pump
-    //
-    
-    MBCoordinate *workingCoordinate = [self points][0];
-    [sortedPoints addObject:workingCoordinate];
-    [unprocessedPoints removeObject:workingCoordinate];
-    
-    while([unprocessedPoints count] > 0){
-    
-        MBCoordinate *closestCoordinate = [self closestCoordinateToCoordinate:workingCoordinate inSet:unsortedPoints];
-        MBCoordinate *secondClosestCoordinate = nil;
-        
-        //
-        //  The closest point might be sorted already!
-        //
-        //  If it is, then we have to find the closest point.
-        //
-        
-        if ([sortedPoints containsObject:closestCoordinate]) {
-            
-            NSInteger indexOfClosest = [sortedPoints indexOfObject:closestCoordinate];
-            NSInteger indexOfSecondClosest = indexOfClosest;
-            NSInteger targetIndex = indexOfClosest+1;
-            
-            if (!secondClosestCoordinate) {
-                [unsortedPoints removeObject:closestCoordinate];
-                secondClosestCoordinate = [self closestCoordinateToCoordinate:workingCoordinate inSet:unsortedPointsExceptClosest];
-                
-                if ([sortedPoints containsObject:secondClosestCoordinate]) {
-                    
-                    //
-                    //  Insert between the two points
-                    //
-                    
-                    indexOfSecondClosest = [sortedPoints indexOfObject:secondClosestCoordinate];
-                    
-                }
-            }
-            
-            if (indexOfSecondClosest < indexOfClosest) {
-                targetIndex = indexOfSecondClosest + 1;
-            }
-            
-            [sortedPoints insertObject:workingCoordinate atIndex:targetIndex];
-            workingCoordinate = [unprocessedPoints anyObject];
-            
-            break;
-            
-        }else{
-            workingCoordinate = closestCoordinate;
-        }
-        
-        [sortedPoints addObject:workingCoordinate];
-        [unprocessedPoints removeObject:workingCoordinate];
-        unsortedPointsExceptClosest = [unsortedPoints copy];
-        secondClosestCoordinate = nil;
-        
-    }
-    
-    [self setPoints:sortedPoints];
 }
 
 - (MBCoordinate *) closestCoordinateToCoordinate:(MBCoordinate *)coordinate inSet:(NSSet *)aSet{
@@ -323,7 +229,9 @@
     xDistance = coordinate.latitude-anotherCoordinate.latitude;
     yDistance = coordinate.longitude-anotherCoordinate.longitude;
 
-    float distance = xDistance/yDistance;
+    float distance = (xDistance*xDistance)+(yDistance*yDistance);
+    
+    distance = sqrtf(distance);
     
     //
     //  Absolute value of floats...
