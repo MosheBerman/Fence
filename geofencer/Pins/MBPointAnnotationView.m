@@ -35,7 +35,7 @@
             [UIView animateWithDuration:0.3 animations:^{
                 [self configureUIForDragging];
             } completion:^(BOOL finished) {
-                self.dragState = MKAnnotationViewDragStateDragging;;
+                self.dragState = MKAnnotationViewDragStateDragging;
             }];
         }else{
             [self configureUIForDragging];
@@ -71,5 +71,6 @@
     [[self layer] setCornerRadius:22];
     [self setAlpha:1.0];
 }
+
 
 @end
