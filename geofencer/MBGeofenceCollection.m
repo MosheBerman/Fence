@@ -73,7 +73,7 @@
 }
 
 - (BOOL) workingFencesHasMinimumNumberOfCoordinates{
-    return [[[self workingGeofence] points] count] == 3;
+    return [[[self workingGeofence] points] count] == 4;
 }
 
 #pragma mark - Fence Manipulation
