@@ -396,8 +396,8 @@
         if (!pin) {
             pin = [[MBPointAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
             
-            pin.canShowCallout = YES;
             pin.draggable = YES;
+            pin.canShowCallout = YES;
         }
         
         [pin setSelected:YES animated:YES];
@@ -653,13 +653,19 @@
         [self.annotations addObject:polygon];
     }
     
+    [self renderActiveFence];
+
+}
+
+- (void) renderActiveFence{
+    
     for (MBCoordinate *coordinate in [[[self fences] workingGeofence] points]) {
         
         NSString *locationAsString = [NSString stringWithFormat:@"%f, %f", coordinate.latitude, coordinate.longitude];
         MKPointAnnotation *mapPointAnnotation = [[MKPointAnnotation alloc] init];
         mapPointAnnotation.coordinate = [coordinate CLLocationCoordinate2DRepresentation];
         mapPointAnnotation.title = locationAsString;
-        [self.mapView addAnnotation:mapPointAnnotation];  
+        [self.mapView addAnnotation:mapPointAnnotation];
         [self.annotations addObject:mapPointAnnotation];
     }
 }
@@ -811,8 +817,11 @@
 }
 
 - (void) closeFence{
-    [self deactivateActiveFence];
+    [[self saveManager] saveFenceToLibrary:[[self fences] workingGeofence]];
     [[self fences] closeActiveFence];
+    [self setIsDragging:NO];
+    [self configureButtonsWithAnimation:NO];
+    [self renderAnnotations];    
 }
 
 - (void) deleteFence{
