@@ -355,9 +355,8 @@
             //  Create a remove button
             //
             
-            UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-            [deleteButton setBackgroundImage:[UIImage imageNamed:@"delete.png"] forState:UIControlStateNormal];
-            [annotationView setLeftCalloutAccessoryView:deleteButton];
+            UIButton *deleteButton = [self deleteButton];
+            [annotationView setRightCalloutAccessoryView:deleteButton];
             
             [annotationView setBackgroundColor:[UIColor clearColor]];
             
@@ -367,7 +366,7 @@
             
             UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
             [infoButton setShowsTouchWhenHighlighted:NO];
-            [annotationView setRightCalloutAccessoryView:infoButton];
+            [annotationView setLeftCalloutAccessoryView:infoButton];
     
         }                
         
@@ -401,32 +400,9 @@
         }
         
         [pin setSelected:YES animated:YES];
+
         
-        //
-        //  Create a remove button
-        //
-        
-        const int kVerticalPadding = 10;
-        
-        NSString *labelText = NSLocalizedString(@"Remove", @"Remove");
-        
-        UIFont *labelFont = [UIFont boldSystemFontOfSize:15];
-        
-        CGFloat width = [labelText sizeWithFont:labelFont constrainedToSize:CGSizeMake(60, 25) lineBreakMode:UILineBreakModeClip].width+(kVerticalPadding*2);
-        
-        UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(1, 0, width, 25)];
-        
-        [deleteButton setBackgroundImage:[[UIImage imageNamed:@"delete_button.png"]
-                                          stretchableImageWithLeftCapWidth:8.0f
-                                          topCapHeight:0.0f]
-                                forState:UIControlStateNormal];
-        
-        [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [[deleteButton titleLabel] setFont: labelFont];
-        [[deleteButton titleLabel] setShadowColor: [UIColor lightGrayColor]];
-        [[deleteButton titleLabel] setShadowOffset: CGSizeMake(0, -1)];
-        [deleteButton setTitle:labelText forState:UIControlStateNormal];
-        
+        UIButton *deleteButton = [self deleteButton];
         
         //
         // TODO: Add numbers to the pins
@@ -461,8 +437,37 @@
 }
 
 
+-(UIButton *)deleteButton{
+    
+    //
+    //  Create a remove button
+    //
+    
+    const int kVerticalPadding = 10;
+    
+    NSString *labelText = NSLocalizedString(@"Remove", @"Remove");
+    
+    UIFont *labelFont = [UIFont boldSystemFontOfSize:15];
+    
+    CGFloat width = [labelText sizeWithFont:labelFont constrainedToSize:CGSizeMake(60, 25) lineBreakMode:UILineBreakModeClip].width+(kVerticalPadding*2);
+    
+    UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(1, 0, width, 25)];
+    
+    [deleteButton setBackgroundImage:[[UIImage imageNamed:@"delete_button.png"]
+                                      stretchableImageWithLeftCapWidth:8.0f
+                                      topCapHeight:0.0f]
+                            forState:UIControlStateNormal];
+    
+    [deleteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [[deleteButton titleLabel] setFont: labelFont];
+    [[deleteButton titleLabel] setShadowColor: [UIColor lightGrayColor]];
+    [[deleteButton titleLabel] setShadowOffset: CGSizeMake(0, -1)];
+    [deleteButton setTitle:labelText forState:UIControlStateNormal];
+    
+    return deleteButton;
+}
 //
-//  After we add the overlay views, recolor the active one. 
+//  After we add the overlay views, recolor the active one.
 //
 
 - (void)mapView:(MKMapView *)mapView didAddOverlayViews:(NSArray *)overlayViews{
@@ -588,11 +593,11 @@
     
     if ([[view annotation] isKindOfClass:[MKPolygon class]]) {
         
-        if ([[view leftCalloutAccessoryView] isEqual:control]) {
+        if ([[view rightCalloutAccessoryView] isEqual:control]) {
             
             [self promptForDelete];
             
-        }else if([[view rightCalloutAccessoryView] isEqual:control]){
+        }else if([[view leftCalloutAccessoryView] isEqual:control]){
             
             //
             //  Show rename box
@@ -685,15 +690,15 @@
     
     const float kLengthOfSide = 128.0;
     
-    const float kWorkingAngle = 90;
+    const int kNumberOfSidesInNewFence = kNumberOfTouchesForAFence;
     
-    const int kNumberOfSidesInNewFence = 3;
+        const float kWorkingAngle = 360/kNumberOfSidesInNewFence;
     
     for(int i=0; i< kNumberOfSidesInNewFence; i++){
         
         float workingAngle = kWorkingAngle * i;
         
-        float adjustedAngle = workingAngle+(kWorkingAngle);
+        float adjustedAngle = workingAngle;
         
         //  Convert to radians
         CGFloat angleInRadians = adjustedAngle*(M_PI/180);
