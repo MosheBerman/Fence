@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1536</int>
-		<string key="IBDocument.SystemVersion">12C50</string>
+		<string key="IBDocument.SystemVersion">12C54</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2840</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
@@ -87,7 +87,6 @@
 								<string key="NSFrame">{{0, 262}, {540, 300}}</string>
 								<reference key="NSSuperview" ref="643694255"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -97,18 +96,18 @@
 								<object class="NSMutableString" key="IBUIText">
 									<bytes key="NS.bytes">RmVuY2UgaXMgYSB1dGlsaXR5IHdoaWNoIGhlbHBzIGRldmVsb3BlcnMgcHJlcGFyZSBnZW9qc29uIGZp
 bGVzIHJpZ2h0IG9uIHRoZWlyIGlQaG9uZSwgaVBhZCwgYW5kIGlQb2QgdG91Y2guIFVzaW5nIEZlbmNl
-IGlzIHJlYWxseSBlYXN5LgoKVGFwIHdpdGggdGhyZWUgZmluZ2VycyB0byBhZGQgYSBuZXcgRmVuY2Us
-IGFuZCBsb25nIHRhcCB0byBhZGQgYSBwb2ludCB0byB5b3VyIEZlbmNlLiBZb3UgY2FuIHJlYXJyYW5n
-ZSBmZW5jZXMgYW55IHdheSB5b3UgbGlrZS4gV2hlbiB5b3UncmUgZG9uZSwgdGFwIHRoZSBEb25lIGJ1
-dHRvbiwgb3IgZG91YmxlIHRhcCB3aXRoIHR3byBmaW5nZXJzLiBGZW5jZXMgYXJlIHNhdmVkIGFzIHNv
-b24gYXMgeW91IGZpbmlzaCBlZGl0aW5nIHRoZW0sIHNvIGRvbid0IHdvcnJ5IGFib3V0IGV4cGVyaW1l
-bnRpbmcuCgpJZiB5b3VyIGhhdmluZyBzbyBtdWNoIGZ1biBtYWtpbmcgRmVuY2VzIHRoYXQgeW91IG5l
-ZWQgbW9yZSByb29tLCB5b3UgY2FuIGhpZGUgdGhlbSBieSB0YXBwaW5nIG9uIHRoZSBjYWxsb3V0IGFu
-ZCB0YXBwaW5nIG9uIHRoZSB4LiBZb3UnbGwgaGF2ZSB0aGUgb3B0aW9uIHRvIGRlbGV0ZSB0aGUgZmVu
-Y2UsIG9yIGp1c3QgY2xvc2UgaXQuCgpXaGVuIHlvdSBoYXZlIHRoZSBGZW5jZSB5b3Ugd2FudCwgeW91
-IGNhbiBleHBvcnQgaXQgdG8gaVR1bmVzIHRvIHVzZSBpdCBpbiB5b3VyIFhjb2RlIHByb2plY3RzIG9u
-IHlvdXIgTWFjLiBUYXAgdGhlIGFjdGlvbiBidXR0b24gdG8gYWNjZXNzIGV4cG9ydCwgaW1wb3J0LCBh
-bmQgdG8gcmVvcGVuIHByZXZpb3VzbHkgY2xvc2VkIEZlbmNlcy4</bytes>
+IGlzIHJlYWxseSBlYXN5LgoKVGFwIHdpdGggZm91ciBmaW5nZXJzIHRvIGFkZCBhIG5ldyBGZW5jZSwg
+YW5kIGxvbmcgdGFwIHRvIGFkZCBhIHBvaW50IHRvIHlvdXIgRmVuY2UuIFlvdSBjYW4gcmVhcnJhbmdl
+IGZlbmNlcyBhbnkgd2F5IHlvdSBsaWtlLiBXaGVuIHlvdSdyZSBkb25lLCB0YXAgdGhlIERvbmUgYnV0
+dG9uLCBvciBkb3VibGUgdGFwIHdpdGggdHdvIGZpbmdlcnMuIEZlbmNlcyBhcmUgc2F2ZWQgYXMgc29v
+biBhcyB5b3UgZmluaXNoIGVkaXRpbmcgdGhlbSwgc28gZG9uJ3Qgd29ycnkgYWJvdXQgZXhwZXJpbWVu
+dGluZy4KCklmIHlvdXIgaGF2aW5nIHNvIG11Y2ggZnVuIG1ha2luZyBGZW5jZXMgdGhhdCB5b3UgbmVl
+ZCBtb3JlIHJvb20sIHlvdSBjYW4gaGlkZSB0aGVtIGJ5IHRhcHBpbmcgb24gdGhlIGNhbGxvdXQgYW5k
+IHRhcHBpbmcgb24gdGhlIHJlbW92ZSBidXR0b24uIFlvdSdsbCBoYXZlIHRoZSBvcHRpb24gdG8gZGVs
+ZXRlIHRoZSBmZW5jZSwgb3IganVzdCBjbG9zZSBpdC4KCldoZW4geW91IGhhdmUgdGhlIEZlbmNlIHlv
+dSB3YW50LCB5b3UgY2FuIGV4cG9ydCBpdCB0byBpVHVuZXMgdG8gdXNlIGl0IGluIHlvdXIgWGNvZGUg
+cHJvamVjdHMgb24geW91ciBNYWMuIFRhcCB0aGUgYWN0aW9uIGJ1dHRvbiB0byBhY2Nlc3MgZXhwb3J0
+LCBpbXBvcnQsIGFuZCB0byByZW9wZW4gcHJldmlvdXNseSBjbG9zZWQgRmVuY2VzLg</bytes>
 								</object>
 								<reference key="IBUITextColor" ref="1072173658"/>
 								<object class="IBUITextInputTraits" key="IBUITextInputTraits">
