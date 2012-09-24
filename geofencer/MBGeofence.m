@@ -210,9 +210,7 @@
         if (distanceBetweenPoints < closestDistance) {
             closest = coordinateInSet;
             closestDistance = distanceBetweenPoints;
-        }
-        
-        
+        }   
     }
     
     return closest;
