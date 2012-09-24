@@ -10,12 +10,9 @@
 		461DFDDA155B874400B62E4B /* MBPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 461DFDD9155B874400B62E4B /* MBPointAnnotation.m */; };
 		466A889116057C38006B5A92 /* MBGeofenceCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 466A889016057C38006B5A92 /* MBGeofenceCollection.m */; };
 		466CEB68160A04FC00A73D90 /* MBSaveManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 466CEB67160A04FC00A73D90 /* MBSaveManager.m */; };
-		468073361559D4E600D96632 /* MBAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 468073351559D4E600D96632 /* MBAnnotationView.m */; };
 		468FB22E155710BA00AA0AFD /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 468FB22D155710BA00AA0AFD /* MessageUI.framework */; };
 		468FB2321557197B00AA0AFD /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 468FB2301557197B00AA0AFD /* delete.png */; };
 		468FB2331557197B00AA0AFD /* delete@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 468FB2311557197B00AA0AFD /* delete@2x.png */; };
-		46A30F7C1557FBF00021D129 /* MBExportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 46A30F7A1557FBF00021D129 /* MBExportViewController.m */; };
-		46A30F7D1557FBF00021D129 /* MBExportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46A30F7B1557FBF00021D129 /* MBExportViewController.xib */; };
 		46CA7D4F1556188E00AFA666 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D4E1556188E00AFA666 /* UIKit.framework */; };
 		46CA7D511556188E00AFA666 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D501556188E00AFA666 /* Foundation.framework */; };
 		46CA7D531556188E00AFA666 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D521556188E00AFA666 /* CoreGraphics.framework */; };
@@ -29,6 +26,16 @@
 		46CA7D7F15562D0400AFA666 /* MBCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CA7D7E15562D0400AFA666 /* MBCoordinate.m */; };
 		46CA7D8C1556348000AFA666 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D8B1556348000AFA666 /* QuartzCore.framework */; };
 		46CA7D8E15563A8B00AFA666 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CA7D8D15563A8B00AFA666 /* CoreLocation.framework */; };
+		46D56E33160A842200112572 /* MBFileManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 46D56E31160A842200112572 /* MBFileManagerViewController.m */; };
+		46D56E34160A842200112572 /* MBFileManagerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46D56E32160A842200112572 /* MBFileManagerViewController.xib */; };
+		46D56E38160A8A9D00112572 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 46D56E37160A8A9D00112572 /* Default-568h@2x.png */; };
+		46D56E5B160B8B6A00112572 /* MBPointAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 46D56E5A160B8B6A00112572 /* MBPointAnnotationView.m */; };
+		46D56E5E160B8B7D00112572 /* MBLabelAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 46D56E5D160B8B7D00112572 /* MBLabelAnnotationView.m */; };
+		46D56E6A160C174000112572 /* MBWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 46D56E68160C173F00112572 /* MBWelcomeViewController.m */; };
+		46D56E6B160C174000112572 /* MBWelcomeViewController~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46D56E69160C174000112572 /* MBWelcomeViewController~ipad.xib */; };
+		46D56E70160C1C8200112572 /* MBWelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46D56E6F160C1C8100112572 /* MBWelcomeViewController.xib */; };
+		46D56E75160C20A300112572 /* Header.png in Resources */ = {isa = PBXBuildFile; fileRef = 46D56E73160C20A300112572 /* Header.png */; };
+		46D56E76160C20A300112572 /* Header@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 46D56E74160C20A300112572 /* Header@2x.png */; };
 		46EB9C291556CDEA007523BB /* delete_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 46EB9C271556CDEA007523BB /* delete_button.png */; };
 		46EB9C2A1556CDEA007523BB /* delete_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 46EB9C281556CDEA007523BB /* delete_button@2x.png */; };
 /* End PBXBuildFile section */
@@ -40,14 +47,9 @@
 		466A889016057C38006B5A92 /* MBGeofenceCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBGeofenceCollection.m; sourceTree = "<group>"; };
 		466CEB66160A04FC00A73D90 /* MBSaveManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBSaveManager.h; sourceTree = "<group>"; };
 		466CEB67160A04FC00A73D90 /* MBSaveManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBSaveManager.m; sourceTree = "<group>"; };
-		468073341559D4E600D96632 /* MBAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBAnnotationView.h; path = Pins/MBAnnotationView.h; sourceTree = "<group>"; };
-		468073351559D4E600D96632 /* MBAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBAnnotationView.m; path = Pins/MBAnnotationView.m; sourceTree = "<group>"; };
 		468FB22D155710BA00AA0AFD /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		468FB2301557197B00AA0AFD /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = delete.png; path = Images/delete.png; sourceTree = "<group>"; };
 		468FB2311557197B00AA0AFD /* delete@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "delete@2x.png"; path = "Images/delete@2x.png"; sourceTree = "<group>"; };
-		46A30F791557FBF00021D129 /* MBExportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBExportViewController.h; sourceTree = "<group>"; };
-		46A30F7A1557FBF00021D129 /* MBExportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBExportViewController.m; sourceTree = "<group>"; };
-		46A30F7B1557FBF00021D129 /* MBExportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MBExportViewController.xib; sourceTree = "<group>"; };
 		46CA7D4A1556188E00AFA666 /* Fence.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fence.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		46CA7D4E1556188E00AFA666 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		46CA7D501556188E00AFA666 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -68,6 +70,20 @@
 		46CA7D7E15562D0400AFA666 /* MBCoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBCoordinate.m; sourceTree = "<group>"; };
 		46CA7D8B1556348000AFA666 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		46CA7D8D15563A8B00AFA666 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		46D56E30160A842200112572 /* MBFileManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBFileManagerViewController.h; path = ImportExport/MBFileManagerViewController.h; sourceTree = "<group>"; };
+		46D56E31160A842200112572 /* MBFileManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBFileManagerViewController.m; path = ImportExport/MBFileManagerViewController.m; sourceTree = "<group>"; };
+		46D56E32160A842200112572 /* MBFileManagerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MBFileManagerViewController.xib; path = ImportExport/MBFileManagerViewController.xib; sourceTree = "<group>"; };
+		46D56E37160A8A9D00112572 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		46D56E59160B8B6A00112572 /* MBPointAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBPointAnnotationView.h; path = Pins/MBPointAnnotationView.h; sourceTree = "<group>"; };
+		46D56E5A160B8B6A00112572 /* MBPointAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBPointAnnotationView.m; path = Pins/MBPointAnnotationView.m; sourceTree = "<group>"; };
+		46D56E5C160B8B7D00112572 /* MBLabelAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBLabelAnnotationView.h; path = Pins/MBLabelAnnotationView.h; sourceTree = "<group>"; };
+		46D56E5D160B8B7D00112572 /* MBLabelAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBLabelAnnotationView.m; path = Pins/MBLabelAnnotationView.m; sourceTree = "<group>"; };
+		46D56E67160C173F00112572 /* MBWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBWelcomeViewController.h; sourceTree = "<group>"; };
+		46D56E68160C173F00112572 /* MBWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBWelcomeViewController.m; sourceTree = "<group>"; };
+		46D56E69160C174000112572 /* MBWelcomeViewController~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MBWelcomeViewController~ipad.xib"; sourceTree = "<group>"; };
+		46D56E6F160C1C8100112572 /* MBWelcomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MBWelcomeViewController.xib; sourceTree = "<group>"; };
+		46D56E73160C20A300112572 /* Header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Header.png; path = Images/Header.png; sourceTree = "<group>"; };
+		46D56E74160C20A300112572 /* Header@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Header@2x.png"; path = "Images/Header@2x.png"; sourceTree = "<group>"; };
 		46EB9C271556CDEA007523BB /* delete_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = delete_button.png; path = Images/delete_button.png; sourceTree = "<group>"; };
 		46EB9C281556CDEA007523BB /* delete_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "delete_button@2x.png"; path = "Images/delete_button@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -99,8 +115,12 @@
 				46CA7D761556246D00AFA666 /* MBGeofence.m */,
 				46CA7D7D15562D0400AFA666 /* MBCoordinate.h */,
 				46CA7D7E15562D0400AFA666 /* MBCoordinate.m */,
-				468073341559D4E600D96632 /* MBAnnotationView.h */,
-				468073351559D4E600D96632 /* MBAnnotationView.m */,
+				461DFDD8155B874400B62E4B /* MBPointAnnotation.h */,
+				461DFDD9155B874400B62E4B /* MBPointAnnotation.m */,
+				46D56E5C160B8B7D00112572 /* MBLabelAnnotationView.h */,
+				46D56E5D160B8B7D00112572 /* MBLabelAnnotationView.m */,
+				46D56E59160B8B6A00112572 /* MBPointAnnotationView.h */,
+				46D56E5A160B8B6A00112572 /* MBPointAnnotationView.m */,
 			);
 			name = "Model Objects";
 			sourceTree = "<group>";
@@ -108,6 +128,7 @@
 		46CA7D3F1556188E00AFA666 = {
 			isa = PBXGroup;
 			children = (
+				46D56E37160A8A9D00112572 /* Default-568h@2x.png */,
 				46CA7D541556188E00AFA666 /* geofencer */,
 				46CA7D4D1556188E00AFA666 /* Frameworks */,
 				46CA7D4B1556188E00AFA666 /* Products */,
@@ -144,13 +165,10 @@
 				46CA7D601556188E00AFA666 /* MBViewController.h */,
 				46CA7D611556188E00AFA666 /* MBViewController.m */,
 				46CA7D631556188E00AFA666 /* MBViewController.xib */,
-				46A30F791557FBF00021D129 /* MBExportViewController.h */,
-				46A30F7A1557FBF00021D129 /* MBExportViewController.m */,
-				46A30F7B1557FBF00021D129 /* MBExportViewController.xib */,
-				461DFDD8155B874400B62E4B /* MBPointAnnotation.h */,
-				461DFDD9155B874400B62E4B /* MBPointAnnotation.m */,
-				466CEB66160A04FC00A73D90 /* MBSaveManager.h */,
-				466CEB67160A04FC00A73D90 /* MBSaveManager.m */,
+				46D56E72160C1E8300112572 /* File Management */,
+				46D56E71160C1E7500112572 /* Welcome */,
+				46D56E73160C20A300112572 /* Header.png */,
+				46D56E74160C20A300112572 /* Header@2x.png */,
 				46A30F771557830E0021D129 /* Model Objects */,
 				46CA7D551556188E00AFA666 /* Supporting Files */,
 			);
@@ -167,6 +185,29 @@
 				46CA7D5C1556188E00AFA666 /* Fence-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		46D56E71160C1E7500112572 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				46D56E67160C173F00112572 /* MBWelcomeViewController.h */,
+				46D56E68160C173F00112572 /* MBWelcomeViewController.m */,
+				46D56E6F160C1C8100112572 /* MBWelcomeViewController.xib */,
+				46D56E69160C174000112572 /* MBWelcomeViewController~ipad.xib */,
+			);
+			name = Welcome;
+			sourceTree = "<group>";
+		};
+		46D56E72160C1E8300112572 /* File Management */ = {
+			isa = PBXGroup;
+			children = (
+				466CEB66160A04FC00A73D90 /* MBSaveManager.h */,
+				466CEB67160A04FC00A73D90 /* MBSaveManager.m */,
+				46D56E30160A842200112572 /* MBFileManagerViewController.h */,
+				46D56E31160A842200112572 /* MBFileManagerViewController.m */,
+				46D56E32160A842200112572 /* MBFileManagerViewController.xib */,
+			);
+			name = "File Management";
 			sourceTree = "<group>";
 		};
 		46EB9C2B1556D00D007523BB /* Images */ = {
@@ -238,7 +279,12 @@
 				46EB9C2A1556CDEA007523BB /* delete_button@2x.png in Resources */,
 				468FB2321557197B00AA0AFD /* delete.png in Resources */,
 				468FB2331557197B00AA0AFD /* delete@2x.png in Resources */,
-				46A30F7D1557FBF00021D129 /* MBExportViewController.xib in Resources */,
+				46D56E34160A842200112572 /* MBFileManagerViewController.xib in Resources */,
+				46D56E38160A8A9D00112572 /* Default-568h@2x.png in Resources */,
+				46D56E6B160C174000112572 /* MBWelcomeViewController~ipad.xib in Resources */,
+				46D56E70160C1C8200112572 /* MBWelcomeViewController.xib in Resources */,
+				46D56E75160C20A300112572 /* Header.png in Resources */,
+				46D56E76160C20A300112572 /* Header@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,11 +316,13 @@
 				46CA7D621556188E00AFA666 /* MBViewController.m in Sources */,
 				46CA7D771556246D00AFA666 /* MBGeofence.m in Sources */,
 				46CA7D7F15562D0400AFA666 /* MBCoordinate.m in Sources */,
-				46A30F7C1557FBF00021D129 /* MBExportViewController.m in Sources */,
-				468073361559D4E600D96632 /* MBAnnotationView.m in Sources */,
 				461DFDDA155B874400B62E4B /* MBPointAnnotation.m in Sources */,
 				466A889116057C38006B5A92 /* MBGeofenceCollection.m in Sources */,
 				466CEB68160A04FC00A73D90 /* MBSaveManager.m in Sources */,
+				46D56E33160A842200112572 /* MBFileManagerViewController.m in Sources */,
+				46D56E5B160B8B6A00112572 /* MBPointAnnotationView.m in Sources */,
+				46D56E5E160B8B7D00112572 /* MBLabelAnnotationView.m in Sources */,
+				46D56E6A160C174000112572 /* MBWelcomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,6 +402,7 @@
 				GCC_PREFIX_HEADER = "geofencer/Fence-Prefix.pch";
 				INFOPLIST_FILE = "geofencer/Fence-Info.plist";
 				PRODUCT_NAME = Fence;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -365,6 +414,7 @@
 				GCC_PREFIX_HEADER = "geofencer/Fence-Prefix.pch";
 				INFOPLIST_FILE = "geofencer/Fence-Info.plist";
 				PRODUCT_NAME = Fence;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -393,12 +443,15 @@
 		46EB9C331556FAE8007523BB /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Moshe Berman";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Moshe Berman";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "geofencer/Fence-Prefix.pch";
 				INFOPLIST_FILE = "geofencer/Fence-Info.plist";
 				PRODUCT_NAME = Fence;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2C13AC4E-A777-4FF4-9179-B7B96875B5E3";
+				PROVISIONING_PROFILE = "EC881A59-1491-4DCF-BAF5-B3A85A395F07";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EC881A59-1491-4DCF-BAF5-B3A85A395F07";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Ad Hoc";
