@@ -19,6 +19,8 @@
 #define kExportFencesTitle NSLocalizedString(@"Export", @"The title for the export button.")
 #define kOpenFenceTitle NSLocalizedString(@"Open", @"The title for the import button.")
 
+#define kNumberOfTouchesForAFence 4
+
 @interface MBViewController () <UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) MBGeofenceCollection *fences;
@@ -143,7 +145,7 @@
     
     [[self fences] newFence];
     
-    for (NSInteger i = 0; i < 3; i++) {
+    for (NSInteger i = 0; i < kNumberOfTouchesForAFence; i++) {
         
         CGPoint touch = [gestureRecognizer locationOfTouch:i inView:[self view]];
         [self addPointToActiveFenceAtPoint:touch];
@@ -223,8 +225,6 @@
     
     NSInteger mapType = [[NSUserDefaults standardUserDefaults] integerForKey:@"mapType"];
     
-
-    
     //
     //  On iPhone, show a button, on iPad, show a segmented control.
     //
@@ -253,7 +253,7 @@
     //
     
     UITapGestureRecognizer *threeFingerTouch = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(newFenceWithGesture:)];
-    [threeFingerTouch setNumberOfTouchesRequired:3];
+    [threeFingerTouch setNumberOfTouchesRequired:kNumberOfTouchesForAFence];
     [threeFingerTouch setDelegate:self];
     
     for (UIGestureRecognizer *gesture in [[self mapView] gestureRecognizers]) {
