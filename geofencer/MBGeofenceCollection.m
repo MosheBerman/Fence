@@ -91,6 +91,18 @@
     [[self workingGeofence] removeLocation:point];
 }
 
+#pragma mark - Fence Point Arrangement
+
+- (void) reorganizeAllFences{
+    for (MBGeofence *fence in self.geofences) {
+        [self reorganizeFence:fence];
+    }
+}
+
+- (void) reorganizeFence:(MBGeofence *)fence{
+    [fence organizePointsByDistance];
+}
+
 #pragma mark - Fence Count
 
 - (NSInteger) numberOfFences{
@@ -145,6 +157,7 @@ int pnpoly(int nvert, double *vertx, double *verty, double testx, double testy) 
             
         }
         
+        // Number of vertices, array of x, array of y, target location lat, target location lon
         int result = pnpoly(count, vertx, verty, location.latitude, location.longitude);
         
         if (result == 1) {

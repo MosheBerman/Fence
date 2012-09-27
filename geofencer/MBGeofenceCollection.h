@@ -33,4 +33,7 @@
 
 - (MBGeofence *)fenceContainingPoint:(CLLocationCoordinate2D)location;
 
+- (void) reorganizeAllFences;
+- (void) reorganizeFence:(MBGeofence *)fence;
+
 @end

@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSMutableArray *points;
 
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *filename;
 @property (nonatomic, readonly, strong) NSDate *creationDate;
 @property (nonatomic, strong) NSDate *modifiedDate;
 
@@ -25,6 +26,12 @@
 
 - (MKPolygon*) polygonRepresentation;
 - (BOOL) matchesPolygon:(MKPolygon *)polygon;
+
+//
+//  Picks a random point and arranges by closest point from there.
+//
+
+- (void) organizePointsByDistance;
 
 //
 //  Export methods

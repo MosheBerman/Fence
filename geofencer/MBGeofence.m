@@ -15,7 +15,8 @@
     
     if (self) {
         _creationDate = [NSDate date];        
-        _name = [@"Unnamed Fence" mutableCopy];
+        _name = [@"New Fence" mutableCopy];
+        _filename = @"New Fence.geojson";
         _points = [@[] mutableCopy];
         _modifiedDate = [NSDate date];
     }
@@ -102,7 +103,9 @@
 
 - (NSString *)description{
     NSMutableArray *temp = [[NSMutableArray alloc] init];
-    for (MBCoordinate *coord in self.points) {
+    NSUInteger count = self.points.count;
+    for (NSUInteger i = 0; i < count; i++) {
+        MBCoordinate *coord = self.points[i];
         [temp addObject:[coord description]];
     }
     return [temp description];
@@ -136,12 +139,13 @@
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     
     NSString *name = [self name];
+    NSString *filename = [self filename];
     NSString *modified = [[self modifiedDate] description];
     NSString *created = [[self creationDate] description];
 
     dictionary[@"coordinates"] = @[[[self asArray] mutableCopy]];
     dictionary[@"type"] = @"MultiPolygon";
-    dictionary[@"properties"] = @{@"created":created, @"modified":modified, @"name":name};
+    dictionary[@"properties"] = @{@"created":created, @"filename": filename, @"modified":modified, @"name":name};
     
     return dictionary;
     
@@ -189,6 +193,35 @@
 
 }
 
+- (MBCoordinate *) closestCoordinateToCoordinate:(MBCoordinate *)coordinate inArray:(NSMutableArray *)anArray{
+    
+    MBCoordinate *closest = nil;
+    CGFloat closestDistance;
+    
+    for (NSUInteger i =0; i < [anArray count]; i++) {
+        MBCoordinate *coordinateInArray = anArray[i];
+        if ([coordinateInArray isEqual:coordinate]) {
+            continue;
+        }
+        
+        if (!closest) {
+            closest = coordinateInArray;
+            closestDistance = [self distanceBetweenCoordinate:coordinate andCoordinate:coordinateInArray];
+        }
+        
+        CGFloat distanceBetweenPoints = [self distanceBetweenCoordinate:coordinate andCoordinate:coordinateInArray];
+        
+        if (distanceBetweenPoints < closestDistance) {
+            closest = coordinateInArray;
+            closestDistance = distanceBetweenPoints;
+        }
+    }
+    
+    return closest;
+
+}
+
+
 - (MBCoordinate *) closestCoordinateToCoordinate:(MBCoordinate *)coordinate inSet:(NSSet *)aSet{
 
     MBCoordinate *closest = nil;
@@ -214,6 +247,25 @@
     }
     
     return closest;
+}
+
+- (void) organizePointsByDistance{
+    
+    NSMutableSet *points = [NSMutableSet setWithArray:[self points]];
+    NSMutableArray *organizedPoints = [@[] mutableCopy];
+    
+    MBCoordinate *workingCoordinate = [points anyObject];
+    [organizedPoints addObject:workingCoordinate];
+    
+    while ([points count]) {
+        
+        MBCoordinate *nextCoordinate = [self closestCoordinateToCoordinate:workingCoordinate inSet:points];
+        [points removeObject:nextCoordinate];
+        [organizedPoints addObject:nextCoordinate];
+        workingCoordinate = nextCoordinate;
+    }
+    
+    [self setPoints:organizedPoints];
 }
 
 //
@@ -243,7 +295,6 @@
     return distance;
     
 }
-
 
 - (void) touch{
     [self setModifiedDate:[NSDate date]];
