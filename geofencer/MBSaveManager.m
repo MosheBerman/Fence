@@ -146,25 +146,34 @@
         return NO;
     }
     
-    NSString *suffix = useJSON ? @"geojson" : @"plist";
-    
-    NSString *fileName = [NSString stringWithFormat:@"%@.%@", [fence name], suffix];
+
+    NSString *fileName = [fence filename];
     NSURL *url = [directory URLByAppendingPathComponent:fileName];
     
-    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
-    
-    
-    //
-    //  Prevent files from overwriting by appending a number to the file name.
-    //
-    
-    NSUInteger fileSuffix = 1;
-    
-    while (fileExists) {
-        fileSuffix++;
-        fileName = [NSString stringWithFormat:@"%@-%i.%@", [fence name], fileSuffix, suffix];
-        url = [directory URLByAppendingPathComponent:fileName];
-        fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
+    if (!fileName){
+
+        NSString *suffix = useJSON ? @"geojson" : @"plist";
+        
+        fileName = [NSString stringWithFormat:@"%@.%@", [fence name], suffix];
+        
+        NSURL *url = [directory URLByAppendingPathComponent:fileName];
+        
+        BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
+        
+        //
+        //  Prevent files from overwriting by appending a number to the file name.
+        //
+        
+        NSUInteger fileSuffix = 1;
+        
+        while (fileExists) {
+            fileSuffix++;
+            fileName = [NSString stringWithFormat:@"%@-%i.%@", [fence name], fileSuffix, suffix];
+            url = [directory URLByAppendingPathComponent:fileName];
+            fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
+        }
+        
+        [fence setFilename:fileName];
     }
     
     NSArray *fenceArray = [fence asArray];
