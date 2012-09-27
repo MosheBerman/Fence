@@ -64,10 +64,10 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
     [super viewDidUnload];
 }
 
-#pragma mark - UITableView Delegate 
+#pragma mark - File Access Methods
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-
+- (NSUInteger) numberOfFilesToActUpon{
+ 
     NSUInteger numberOfJSONFiles = [[self saveManager] numberOfJSONFilesAvailableForImport];
     
     if ([self mode] == kFileOpen) {
@@ -76,7 +76,13 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
         numberOfJSONFiles = [[self saveManager] numberOfJSONFilesAvailableForExport];
     }
 
-    return MAX(numberOfJSONFiles, 1);
+    return numberOfJSONFiles;
+}
+
+#pragma mark - UITableView Delegate
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return MAX([self numberOfFilesToActUpon], 1);
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -177,7 +183,9 @@ typedef void(^MBFileOperationCompletionBlock)(BOOL successful);
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(dismiss)];
     
-    [[self navigationItem] setRightBarButtonItem:doneButton];
+    if ([self numberOfFilesToActUpon] > 0) {
+        [[self navigationItem] setRightBarButtonItem:doneButton];
+    }
     
     [[self navigationItem] setLeftBarButtonItem:cancelButton];
 }
