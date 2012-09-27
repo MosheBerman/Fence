@@ -151,6 +151,22 @@
     NSString *fileName = [NSString stringWithFormat:@"%@.%@", [fence name], suffix];
     NSURL *url = [directory URLByAppendingPathComponent:fileName];
     
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
+    
+    
+    //
+    //  Prevent files from overwriting by appending a number to the file name.
+    //
+    
+    NSUInteger fileSuffix = 1;
+    
+    while (fileExists) {
+        fileSuffix++;
+        fileName = [NSString stringWithFormat:@"%@-%i.%@", [fence name], fileSuffix, suffix];
+        url = [directory URLByAppendingPathComponent:fileName];
+        fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[url path]];
+    }
+    
     NSArray *fenceArray = [fence asArray];
     
     NSDictionary *fenceDictionary = [fence asDictionary];
