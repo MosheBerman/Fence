@@ -862,7 +862,9 @@
     MBGeofenceCollection *fences = [notification object];
     
     if (fences) {
-        [self setFences:fences];        
+        
+        [fences reorganizeAllFences];
+        [self setFences:fences];
         [self renderAnnotations];
     }
 }
